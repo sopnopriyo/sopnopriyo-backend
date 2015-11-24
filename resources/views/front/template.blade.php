@@ -136,8 +136,6 @@
 							<a href="{!! url('language') !!}"><img width="32" height="32" alt="en" src="{!! asset('img/' . (session('locale') == 'fr' ? 'english' : 'french') . '-flag.png') !!}"></a>
 						</li>
 						-->
-
-
 					</ul>
 				</div>
 			</div>
