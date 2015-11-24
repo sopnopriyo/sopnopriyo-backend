@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4efadfab78453e6860c1fc27a47c5f0b",
-    "content-hash": "69adac8f34b8a1d8a574f6ebb9f55884",
+    "hash": "164731e69fdabcf76a006eb7512114f0",
+    "content-hash": "32a648c271e4033a1a83e99958f6f2b0",
     "packages": [
         {
             "name": "bestmomo/filemanager",
@@ -260,50 +260,6 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
-        },
-        {
-            "name": "heroku/heroku-buildpack-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "71f0f07375eed9f0e8417d290192e9331cbbb4cd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/71f0f07375eed9f0e8417d290192e9331cbbb4cd",
-                "reference": "71f0f07375eed9f0e8417d290192e9331cbbb4cd",
-                "shasum": ""
-            },
-            "bin": [
-                "bin/heroku-hhvm-apache2",
-                "bin/heroku-hhvm-nginx",
-                "bin/heroku-php-apache2",
-                "bin/heroku-php-nginx"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David Zuelke",
-                    "email": "dz@heroku.com"
-                }
-            ],
-            "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP/HHVM and Apache2/Nginx as on Heroku",
-            "homepage": "http://github.com/heroku/heroku-buildpack-php",
-            "keywords": [
-                "apache",
-                "apache2",
-                "foreman",
-                "heroku",
-                "hhvm",
-                "nginx",
-                "php"
-            ],
-            "time": "2015-11-16 16:11:11"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -2049,6 +2005,50 @@
                 "test"
             ],
             "time": "2015-05-11 14:41:42"
+        },
+        {
+            "name": "heroku/heroku-buildpack-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heroku/heroku-buildpack-php.git",
+                "reference": "71f0f07375eed9f0e8417d290192e9331cbbb4cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/71f0f07375eed9f0e8417d290192e9331cbbb4cd",
+                "reference": "71f0f07375eed9f0e8417d290192e9331cbbb4cd",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/heroku-hhvm-apache2",
+                "bin/heroku-hhvm-nginx",
+                "bin/heroku-php-apache2",
+                "bin/heroku-php-nginx"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Zuelke",
+                    "email": "dz@heroku.com"
+                }
+            ],
+            "description": "Toolkit for starting a PHP application locally, with or without foreman, using the same config for PHP/HHVM and Apache2/Nginx as on Heroku",
+            "homepage": "http://github.com/heroku/heroku-buildpack-php",
+            "keywords": [
+                "apache",
+                "apache2",
+                "foreman",
+                "heroku",
+                "hhvm",
+                "nginx",
+                "php"
+            ],
+            "time": "2015-11-16 16:11:11"
         },
         {
             "name": "mockery/mockery",
