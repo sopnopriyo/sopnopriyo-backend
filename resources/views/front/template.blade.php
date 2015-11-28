@@ -83,7 +83,7 @@
 							{!! link_to('/', trans('front/site.home')) !!}
 						</li>
 						<li {!! classActivePath('solutions') !!}>
-							{!! link_to('solutions', trans('Solutions')) !!}
+							{!! link_to('services', trans('Services')) !!}
 						</li>
 						<li {!! classActivePath('portfolio') !!}>
 							{!! link_to('portfolio', trans('Portfolio')) !!}

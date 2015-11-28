@@ -10,8 +10,8 @@
 			<h3>Services</h3>
 			<span class="ser-line"> </span>
 			<p>
-				It Sopnopriyo International We offer number of solutions to meet the latest online trend of our Customers.We always welcome our
-				customer to express their requirements.
+				It Sopnopriyo International We offer number of Services to meet the latest online trend of Business.We always welcome our
+				customer to express their ideas.
 			</div>
 			<div class="col-md-4 ser-grid">
 				{!! HTML::image('img/s1.png') !!}

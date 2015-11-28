@@ -30,8 +30,8 @@ Route::group(['middleware' => 'auth'], function(){
 
 // Our service
 
-Route::get('solutions', function () {
-    return view('front.solutions');
+Route::get('services', function () {
+    return view('front.services');
 });
 
 Route::get('portfolio', function () {
