@@ -13,7 +13,8 @@
                 <h1 class="page-header">About Us
                     <small>It's Nice to Meet You!</small>
                 </h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, explicabo dolores ipsam aliquam inventore corrupti eveniet quisquam quod totam laudantium repudiandae obcaecati ea consectetur debitis velit facere nisi expedita vel?</p>
+                <p>Our team members are from different nationalities including Bangladesh, Malaysia, India, Libiya and so on.We are some self motivated individuals commits to use the most shopisticated technology in our projects.We are always
+                    hungry to learn new technology and apply them in our work to enhance the look and feel, performance and security.</p>
             </div>
         </div>
 

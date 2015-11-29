@@ -2,7 +2,9 @@
 
 @section('main')
 <!--services start here-->
-
+<br>
+<br>
+<br>
 <div class="services" id="services">
 	<div class="container">
 		<div class="sevices-main" id="mem-mover">
@@ -41,43 +43,9 @@
 					<a href="#">Read More</a>
 				</div>
 			</div>
-			<div class="clearfix"> </div>			
+						
 		</div>
-		<div class="skills">
-			<h3>Our Skills</h3>
-			<div class="col-md-4 skills-gd">
-				<h4>Web Design</h4>
-				<span class="skill-line"> </span>
-				<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.</p>
-			</div>
-			<div class="col-md-4 skills-gd">
-				<h4>Web Design</h4>
-				<span class="skill-line"> </span>
-				<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.</p>
-			</div>
-			<div class="col-md-4 skills-gd">
-				<h4>Web Design</h4>
-				<span class="skill-line"> </span>
-				<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.</p>
-			</div>
-			<div class="col-md-4 skills-gd">
-				<h4>Web Design</h4>
-				<span class="skill-line"> </span>
-				<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.</p>
-			</div>
-			<div class="col-md-4 skills-gd">
-				<h4>Web Design</h4>
-				<span class="skill-line"> </span>
-				<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.</p>
-			</div>
-			<div class="col-md-4 skills-gd">
-				<h4>Web Design</h4>
-				<span class="skill-line"> </span>
-				<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti.</p>
-			</div>
-		  <div class="clearfix"> </div>
-		  <a class="scroll" href="#ser-mover"> <span class="mover"> </span> </a>
-		</div>
+		 
 	</div>
 </div>
 <!--services end here-->
