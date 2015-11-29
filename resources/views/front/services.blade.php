@@ -3,7 +3,7 @@
 @section('main')
 <!--services start here-->
 <br>
-<br>
+<hr>
 <br>
 <div class="services" id="services">
 	<div class="container">
@@ -14,6 +14,7 @@
 			<p>
 				It Sopnopriyo International We offer number of Services to meet the latest online trend of Business.We always welcome our
 				customer to express their ideas.
+			</p>
 			</div>
 			<div class="col-md-4 ser-grid">
 				{!! HTML::image('img/s1.png') !!}

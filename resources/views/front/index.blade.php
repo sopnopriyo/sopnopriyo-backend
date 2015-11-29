@@ -23,6 +23,7 @@
       			<img src="{{$slider->file_name}}" data-color="lightblue" alt="First Image">
       			<div class="carousel-caption">
         			<h3>{{$slider->title}}</h3>
+              <h3>{{$slider->description}}</h3>
       			</div>
     		</div>
     	@else
@@ -30,6 +31,7 @@
       			<img src="{{$slider->file_name}}" data-color="lightblue" alt="First Image">
       			<div class="carousel-caption">
         			<h3>{{$slider->title}}</h3>
+              <h3>{{$slider->description}}</h3>
       			</div>
     		</div>
     	
