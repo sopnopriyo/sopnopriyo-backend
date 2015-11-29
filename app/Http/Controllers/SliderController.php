@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Slider;
 use Input;
 use Validator;
-
+use App\Repositories\SliderRepository;
 class SliderController extends Controller
 {
     /**
@@ -22,12 +22,11 @@ class SliderController extends Controller
     {
        $this->middleware('admin');
     }
-    public function index()
+    public function index(SliderRepository $slider_gestion)
     {
-        //
 
         // get all the nerds
-        $sliders = Slider::all();
+        $sliders = $slider_gestion->index();
 
         // load the view and pass the nerds
         return view('slider.index',compact('sliders'));
@@ -52,10 +51,7 @@ class SliderController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
-            // Validation //
-
+        
         
         $validation = Validator::make($request->all(), [
             'title'     => 'required|regex:/^[A-Za-z ]+$/',
@@ -129,7 +125,7 @@ class SliderController extends Controller
         $validation = \Validator::make($request->all(), [
             'title'     => 'required|regex:/^[A-Za-z ]+$/',
             'description' => 'required',
-            'file_name'    => 'sometimes|image|mimes:jpeg,png|min:1|max:250'
+            'file_name'    => 'required|image|mimes:jpeg,png|min:1|max:250'
         ]);
 
         // Check if it fails //
