@@ -19,7 +19,7 @@
 
 <nav class="navbar navbar-inverse">
     <div class="navbar-header">
-        <a class="navbar-brand" href="{{ URL::to('slider') }}">Slider Alert</a>
+        <a class="navbar-brand" href="{{ URL::to('slider') }}">Homepage Slider</a>
     </div>
     <ul class="nav navbar-nav">
         <li><a href="{{ URL::to('slider') }}">View All Sliders</a></li>

@@ -12,8 +12,9 @@
 			<h3>Services</h3>
 			<span class="ser-line"> </span>
 			<p>
-				It Sopnopriyo International We offer number of Services to meet the latest online trend of Business.We always welcome our
-				customer to express their ideas.
+				This is Sopnopriyo International. We offer a number of Services to meet the latest online trends of Business.
+				We always welcome our customers to express their ideas to <br>
+				us in order to put them in action.
 			</p>
 			</div>
 			<div class="col-md-4 ser-grid">

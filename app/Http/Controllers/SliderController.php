@@ -10,36 +10,39 @@ use App\Slider;
 use Input;
 use Validator;
 use App\Repositories\SliderRepository;
+
 class SliderController extends Controller
 {
+    
+    public function __construct()
+    {
+       $this->middleware('admin');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    public function __construct()
-    {
-       $this->middleware('admin');
-    }
     public function index(SliderRepository $slider_gestion)
     {
 
-        // get all the nerds
+        // get all the sliders
         $sliders = $slider_gestion->index();
 
-        // load the view and pass the nerds
+        // load the view and pass the sliders
         return view('slider.index',compact('sliders'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new slider.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        
         return view('slider.create');
     }
 
@@ -49,33 +52,11 @@ class SliderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+
+    
+    public function store(SliderRepository $slider_gestion, Request $request)
     {
-        
-        
-        $validation = Validator::make($request->all(), [
-            'title'     => 'required|regex:/^[A-Za-z ]+$/',
-            'description' => 'required',
-            'file_name'     => 'required|image|mimes:jpeg,png|min:1'
-        ]);
-
-        // Check if it fails //
-        if( $validation->fails() ){
-            return redirect()->back()->withInput()
-                             ->with('errors', $validation->errors() );
-        }
-
-        $image = new Slider;
-
-        $file = $request->file('file_name');
-        $destination_path = 'uploads/';
-        $filename = str_random(6).'_'.$file->getClientOriginalName();
-        $file->move($destination_path, $filename);
-        
-        $image->file_name = $destination_path . $filename;
-        $image->title = $request->input('title');
-        $image->description = $request->input('description');
-        $image->save();    
+        $slider_gestion->store($request);
         
         return redirect('slider');
     }
@@ -119,35 +100,10 @@ class SliderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(SliderRepository $slider_gestion, Request $request, $id)
     {
-        // Validation //
-        $validation = \Validator::make($request->all(), [
-            'title'     => 'required|regex:/^[A-Za-z ]+$/',
-            'description' => 'required',
-            'file_name'    => 'required|image|mimes:jpeg,png|min:1|max:250'
-        ]);
-
-        // Check if it fails //
-        if( $validation->fails() ){
-            return redirect()->back()->withInput()
-                             ->with('errors', $validation->errors() );
-        }
-
-        // Process valid data & go to success page //
-        $image = Slider::find($id);
-
-        if( $request->hasFile('file_name') ){
-           $file = $request->file('file_name');
-           $destination_path = 'uploads/';
-           $filename = str_random(6).'_'.$file->getClientOriginalName();
-           $file->move($destination_path, $filename);
-           $image->file_name = $destination_path . $filename;
-        }
+        $slider_gestion->update($request,$id);
         
-        $image->title = $request->input('title');
-        $image->description = $request->input('description');
-        $image->save();
         return redirect('slider');
     
     }
@@ -158,11 +114,12 @@ class SliderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(SliderRepository $slider_gestion,$id)
     {
-        //
-        $slider = Slider::find($id);
-        $slider->delete();
+        
+        $slider_gestion->destroy($id);
+
         return redirect('slider');
     }
+
 }

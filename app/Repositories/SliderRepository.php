@@ -1,13 +1,14 @@
 <?php namespace App\Repositories;
 
 use App\Slider;
+use Validator;
 
 class SliderRepository extends BaseRepository {
 
 	/**
-	 * Create a new ContactRepository instance.
+	 * Create a new SliderRepository instance.
 	 *
-	 * @param  App\Models\Contact $contact
+	 * @param  App\Slider $slider
 	 * @return void
 	 */
 	public function __construct(Slider $slider)
@@ -17,43 +18,93 @@ class SliderRepository extends BaseRepository {
 	}
 
 	/**
-	 * Get contacts collection.
+	 * Get sliders collection.
 	 *
 	 * @return Illuminate\Support\Collection
 	 */
 	public function index()
 	{
 
-		 //$sliders = Slider::all();
-		return $this->model
-		->all();
+		//return all the sliders
+		
+		return $this->model->all();
 	}
 
 	/**
-	 * Store a contact.
+	 * Store a slider.
 	 *
-	 * @param  array $inputs
+	 * @param  array $request
 	 * @return void
 	 */
-	public function store($inputs)
+	public function store($request)
 	{
-		 
+		
+
+        $validation = Validator::make($request->all(), [
+            'title'     => 'required|regex:/^[A-Za-z ]+$/',
+            'description' => 'required',
+            'file_name'     => 'required|image|mimes:jpeg,png|min:1'
+        ]);
+
+        // Check if it fails //
+        if( $validation->fails() ){
+            return redirect()->back()->withInput()
+                             ->with('errors', $validation->errors() );
+        }
+
+        $image = new $this->model;
+
+        $file = $request->file('file_name');
+        $destination_path = 'uploads/';
+        $filename = str_random(6).'_'.$file->getClientOriginalName();
+        $file->move($destination_path, $filename);
+        
+        $image->file_name = $destination_path . $filename;
+        $image->title = $request->input('title');
+        $image->description = $request->input('description');
+        $image->save();    
+         
 	}
 
 	/**
-	 * Update a contact.
+	 * Update a slider.
 	 *
 	 * @param  bool  $vu
 	 * @param  int   $id
 	 * @return void
 	 */
-	public function update($seen, $id)
+	public function update($request, $id)
 	{
-		$contact = $this->getById($id);
+		// Validation //
+        $validation = \Validator::make($request->all(), [
+            'title'     => 'required',
+            'description' => 'required',
+            'file_name'    => 'image|mimes:jpeg,png|min:1|max:250'
+        ]);
 
-		$contact->seen = $seen == 'true';
+        // Check if it fails //
+        if( $validation->fails() ){
+            return redirect()->back()->withInput()
+                             ->with('errors', $validation->errors() );
+        }
 
-		$contact->save();
+        // Process valid data & go to success page //
+        $image = $this->getById($id);
+
+        if( $request->hasFile('file_name') ){
+           $file = $request->file('file_name');
+           $destination_path = 'uploads/';
+           $filename = str_random(6).'_'.$file->getClientOriginalName();
+           $file->move($destination_path, $filename);
+           $image->file_name = $destination_path . $filename;
+        }
+        
+        $image->title = $request->input('title');
+        $image->description = $request->input('description');
+        $image->save();
+        
 	}
+
+	
 
 }
