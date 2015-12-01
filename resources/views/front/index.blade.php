@@ -30,7 +30,7 @@
     			<div class="item">
       			<img src="{{$slider->file_name}}" data-color="lightblue" alt="First Image">
       			<div class="carousel-caption">
-        			<h3>{{$slider->title}}</h3>
+        			<h1>{{$slider->title}}</h1>
               <h3>{{$slider->description}}</h3>
       			</div>
     		</div>
@@ -59,6 +59,67 @@
 
   -->
 </div>
+
+ <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <br>
+            <div class="row text-center">
+
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-cogs fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p class="service-heading">Admin Panel</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-laptop fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p class="service-heading">Responsive Web Design</p>
+                </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-file-image-o fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p class="service-heading">Logo & Banner Design</p>
+                    </div>
+                
+                
+            </div>
+            <hr>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-mobile fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p class="service-heading">Mobile Apps Development</p>
+                    </div>
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p class="service-heading">Software Maintenance</p>
+                     </div>
+                
+                <div class="col-md-4">
+                    <span class="fa-stack fa-4x">
+                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+                    </span>
+                    <p class="service-heading">Consulting</p>
+                    </div>
+                
+            </div>
+
+          </div>
+    </section>
+
 
 <script>
 $('.carousel').carousel({
