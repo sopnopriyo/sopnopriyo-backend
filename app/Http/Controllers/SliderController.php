@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Slider;
 use Input;
 use Validator;
+use File;
 use App\Repositories\SliderRepository;
 
 class SliderController extends Controller
@@ -114,11 +115,19 @@ class SliderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SliderRepository $slider_gestion,$id)
+    public function destroy($id)
     {
         
-        $slider_gestion->destroy($id);
+        $slider = Slider::find($id);
+        
+        if(File::isFile($slider->file_name)){
 
+            \File::delete($slider->file_name);
+        
+        }
+
+        $slider->delete();     
+        
         return redirect('slider');
     }
 
