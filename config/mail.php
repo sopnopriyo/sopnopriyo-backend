@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'host' => 'smtp.gmail.com',
+	'host' => 'smtpout.asia.secureserver.net',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ return [
 	|
 	*/
 
-	'from' => ['address' => '', 'name' => ''],
+	'from' => ['address' => 'shahin@sopnopriyo.com', 'name' => 'Shahin'],
 
 	/*
 	|--------------------------------------------------------------------------
