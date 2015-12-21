@@ -4,9 +4,13 @@ install_newrelic_ext() {
     # special treatment for New Relic; we enable it if we detect a license key for it
     # otherwise users would have to have it in their require section, which is annoying in development environments
     NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY:-}
-    if [[ ( ${#exts[@]} -eq 0 || ! ${exts[*]} =~ "newrelic" ) && -n "$NEW_RELIC_LICENSE_KEY" ]]; then
-        install_ext "newrelic" "add-on detected"
-        exts+=("newrelic")
+    if [[ "$engine" == "php" && ( ${#exts[@]} -eq 0 || ! ${exts[*]} =~ "newrelic" ) && -n "$NEW_RELIC_LICENSE_KEY" ]]; then
+        if $engine $(which composer) require --quiet --update-no-dev -d "$BUILD_DIR/.heroku/php" -- "heroku-sys/ext-newrelic:*"; then
+            install_ext "newrelic" "add-on detected"
+            exts+=("newrelic")
+        else
+            warning_inline "New Relic detected, but no suitable extension available"
+        fi
     fi
 }
 
