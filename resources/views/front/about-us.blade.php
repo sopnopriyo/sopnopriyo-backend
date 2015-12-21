@@ -39,15 +39,15 @@
                 <p>What does this team member to? Keep it short! This is also a great spot for social links!</p>
             </div>
             <div class="col-lg-4 col-sm-6 text-center">
-       	<img class="img-circle img-responsive img-center" src="{!! '/img/paris.jpg '!!}" height="200" width="200" alt="">
-                <h3>Ai Rave
-                    <small>Developer</small>
+       	<img class="img-circle img-responsive img-center" src="{!! '/img/austin.jpg '!!}" height="200" width="200" alt="">
+                <h3>Austin Goh
+                    <small>Project Manager</small>
                 </h3>
                 <p>What does this team member to? Keep it short! This is also a great spot for social links!</p>
             </div>
             <div class="col-lg-4 col-sm-6 text-center">
         <img class="img-circle img-responsive img-center" src="{!! '/img/sheeraj.jpg '!!}" height="200" width="200" alt="">
-                <h3>Md Sheeraj
+                <h3>Md Sheeraz
                     <small>Developer</small>
                 </h3>
                 <p>What does this team member to? Keep it short! This is also a great spot for social links!</p>
