@@ -1,19 +1,19 @@
 <?php
 
 return [
-	'title' => 'Oubli du mot de passe',
-	'info'  => 'Vous avez oublié votre mot de passe, ce n\'est pas bien grave. Nous allons vous donner la possibilité d\'en enregistrer un autre. Mais pour votre propre sécurité nous voulons être sûr de votre identité. Veuillez nous préciser votre email dans le formulaire suivant. Vous recevrez un message qui vous indiquera la procédure à suivre pour créer un nouveau mot de passe.',
-	'email' => 'Votre Email',
-	'title-reset' => 'Création mot de passe',
-	'reset-info' => 'Pour créer un nouveau mot de passe pour votre compte veuillez remplir le formulaire suivant.',
-	'password' => 'Votre Mot de passe',
-	'confirm-password' => 'Confirmez votre mot de passe',
-	'warning' => 'Attention',
-	'warning-password' => 'Au moins 8 caractères',
-	'reset' => 'Réinitialisation mot de passe',
-	'email-title' => 'Réinitialisation du mot de passe',
-	'email-intro'=> 'Pour réinitialiser votre mot de passe ',
-	'email-link' => 'cliquez sur ce lien',
-	'email-expire' => 'Ce lien expirera dans ',
+	'title' => 'Password forgotten',
+	'info'  => 'You have forgotten your password, dont mind ! You can create a new one. But for your own security we want to be sure of your identity. So send us your email by filling this form. You will get a message with instruction to create your new password.',
+	'email' => 'Your email',
+	'title-reset' => 'Password creation',
+	'reset-info' => 'To create a new password please fill this form :',
+	'password' => 'Your password',
+	'confirm-password' => 'Confirm your password',
+	'warning' => 'Warning',
+	'warning-password' => 'At least 8 characters',
+	'reset' => 'Password reminder',
+	'email-title' => 'Password reminder',
+	'email-intro'=> 'To reset your password ',
+	'email-link' => 'click on this link',
+	'email-expire' => 'This link will expire in ',
 	'minutes' => ' minutes'
 ];

@@ -1,10 +1,10 @@
 <?php
 
 return [
-	'title' => 'Formulaire de contact',
-	'text' => 'Si vous désirez nous laisser un message veuillez remplir le formulaire suivant :',
-	'name' => 'Votre nom',
-	'email' => 'Votre Email',
-	'message' => 'Votre message',
-	'ok' => 'Votre message a bien été enregistré, nous vous répondrons dès que possible.'
+	'title' => 'Contact form',
+	'text' => 'If you wish to send a message please fill this form :',
+	'name' => 'Your name',
+	'email' => 'Your email',
+	'message' => 'Your message',
+	'ok' => 'Your message has been recorded, we will respond as soon as possible.'
 ];

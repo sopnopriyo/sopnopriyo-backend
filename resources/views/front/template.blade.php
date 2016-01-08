@@ -56,6 +56,20 @@
 						<li {!! classActivePath('/') !!}>
 							{!! link_to('/', trans('front/site.home')) !!}
 						</li>
+
+						<li {!! classActivePath('solutions') !!}>
+							{!! link_to('services', trans('Services')) !!}
+						</li>
+
+						<li {!! classActivePath('portfolio') !!}>
+							{!! link_to('portfolio', trans('Portfolio')) !!}
+						</li>
+
+						
+						<li {!! classActivePath('About Us') !!}>
+							{!! link_to('about-us', trans('About Us')) !!}
+						</li>
+
 						@if(session('statut') == 'visitor' || session('statut') == 'user')
 							<li {!! classActivePath('contact/create') !!}>
 								{!! link_to('contact/create', trans('front/site.contact')) !!}
@@ -121,7 +135,7 @@
 
 	<footer role="contentinfo">
 		 @yield('footer')
-		<p class="text-center"><small>Copyright &copy; Momo</small></p>
+		<p class="text-center"><small>Copyright &copy; Sopnopriyo</small></p>
 	</footer>
 		
 	{!! HTML::script('//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js') !!}

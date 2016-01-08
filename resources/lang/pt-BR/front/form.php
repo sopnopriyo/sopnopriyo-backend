@@ -1,5 +1,5 @@
 <?php
 
 return [
-	'send' => 'Enviar'
+	'send' => 'Send'
 ];

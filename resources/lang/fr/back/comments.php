@@ -1,14 +1,14 @@
 <?php
 
 return [
-	'dashboard' => 'Gestion des commentaires',
-	'comments' => 'Commentaires',
-	'author' => 'Auteur',		
+	'dashboard' => 'Comments gestion',
+	'comments' => 'Comments',
+	'author' => 'Author',		
 	'date' => 'Date',
-	'post' => 'Article',
-	'valid' => 'valide',
-	'seen' => 'Vu',
-	'destroy' => 'Supprimer',
-	'destroy-warning' => 'Vraiment supprimer ce commentaire ?',
-	'fail' => 'Echec de la mise à jour.'	
+	'post' => 'Post',
+	'valid' => 'valid',
+	'seen' => 'seen',
+	'destroy' => 'Destroy',
+	'destroy-warning' => 'Really destroy this comment ?',
+	'fail' => 'Update fail.'	
 ];

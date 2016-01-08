@@ -1,15 +1,15 @@
 <?php
 
 return [
-	'title' => 'Laravel 5',
-	'sub-title' => 'Um fantástico framework PHP',
+	'title' => 'Sopnopriyo',
+	'sub-title' => 'One stop software solution',
 	'home' => 'Home',
-	'contact' => 'Contato',
+	'contact' => 'Contact',
 	'blog' => 'Blog',
-	'register' => 'Cadastro',
-	'forget-password' => 'Esqueci minha senha',
-	'connection' => 'Login',
-	'administration' => 'Administração',
-	'redaction' => 'Redação',
-	'logout' => 'Sair'
+	'register' => 'Register',
+	'forget-password' => 'Forgotten password',
+	'connection' => 'Connection',
+	'administration' => 'Administration',
+	'redaction' => 'Redaction',
+	'logout' => 'Logout'
 ];

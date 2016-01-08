@@ -1,16 +1,16 @@
 <?php
 
 return [
-	'connection' => 'Connexion',
-	'text' => 'Pour vous connecter au site il vous suffit de remplir le formulaire suivant :',
-	'email' => 'Votre Email',
-	'password' => 'Votre Mot de passe',
-	'remind' => 'Se rappeler de moi',
-	'forget' => 'J\'ai oublié mon mot de passe !',
-	'register' => 'Vous n\'êtes pas encore inscrit ?',
-	'register-info' => 'Vous pouvez vous inscrire rapidement et gratuitement et pouvoir ainsi laisser des commentaires en cliquant sur le bouton ci-dessous.',
-	'registering' => 'Je m\'inscris',
-	'credentials' => 'Ces informations ne correspondent pas à celles que nous avons dans notre base de données.',
-	'log' => 'Votre email ou votre nom d\'utilisateur',
-	'maxattempt' => 'Vous avez atteint le nombre maximum de tentatives de connexion. Réessayez dans une minute.'
+	'connection' => 'Connection',
+	'text' => 'To log on this site you must fill this form :',
+	'email' => 'Your email',
+	'password' => 'Your password',
+	'remind' => 'Remember me',
+	'forget' => 'I have forgotten my password !',
+	'register' => 'Not registered ?',
+	'register-info' => 'To register quickly just click on the button !',
+	'registering' => 'I subscribe',
+	'credentials' => 'These credentials do not match our records.',
+	'log' => 'Your email or your user name',
+	'maxattempt' => 'You have reached the maximum number of login attempts. Try again in one minute.'
 ];

@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'error-404' => 'Erro 404',
-	'info' => 'Esta página não existe !',
+	'error-404' => 'Error 404',
+	'info' => 'This page doesn\'t exist !',
 	'button' => 'Home'
 ];

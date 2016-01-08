@@ -1,13 +1,13 @@
 <?php
 
 return [
-	'dashboard' => 'Gestão de Mensagens',
-	'messages' => 'Mensagens',
-	'name' => 'Nome',
+	'dashboard' => 'Messages gestion',
+	'messages' => 'Messages',
+	'name' => 'Name',
 	'email' => 'Email',		
-	'date' => 'Data',
-	'seen' => 'revisado',
-	'destroy' => 'Excluido',
-	'destroy-warning' => 'Realmente destruir esta mensagem ?',
-	'fail' => 'Falha na atualização.',
+	'date' => 'Date',
+	'seen' => 'Seen',
+	'destroy' => 'Destroy',
+	'destroy-warning' => 'Really destroy this message ?',
+	'fail' => 'Update fail.'	
 ];

@@ -33,6 +33,24 @@ Route::put('postactive/{id}', 'BlogController@updateActive');
 
 Route::resource('blog', 'BlogController');
 
+// Our service
+
+Route::get('services', function () {
+    return view('front.services');
+});
+
+//Portfolio
+
+Route::get('portfolio', function () {
+    return view('front.portfolio');
+});
+
+//About Us
+
+Route::get('about-us', function () {
+    return view('front.about-us');
+});
+
 // Comment
 Route::resource('comment', 'CommentController', [
 	'except' => ['create', 'show']

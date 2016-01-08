@@ -1,19 +1,19 @@
 <?php
 
 return [
-	'title' => 'Esqueci minha senha',
-	'info'  => 'Você esqueceu sua senha, fique calmo ! Você pode criar uma nova. Mas para sua própria segurança nós queremos ter certeza de sua identificação. Então envie um email para nós preenchendo este formulário. Você vai receber uma mensagem com instruções para criar uma nova senha.',
-	'email' => 'Seu email',
-	'title-reset' => 'Criação de senha',
-	'reset-info' => 'Para criar um anova senha, por favor preencha este formulário :',
-	'password' => 'Sua senha',
-	'confirm-password' => 'Confirme sua senha',
-	'warning' => 'Aviso',
-	'warning-password' => 'Ao menos 8 caracteres',
-	'reset' => 'Lembrete de senha',
-	'email-title' => 'Lembrete de senha',
-	'email-intro'=> 'Para redefinir sua senha ',
-	'email-link' => 'clique neste link',
-	'email-expire' => 'este link vai expirar em  ',
-	'minutes' => ' minutos'
+	'title' => 'Password forgotten',
+	'info'  => 'You have forgotten your password, dont mind ! You can create a new one. But for your own security we want to be sure of your identity. So send us your email by filling this form. You will get a message with instruction to create your new password.',
+	'email' => 'Your email',
+	'title-reset' => 'Password creation',
+	'reset-info' => 'To create a new password please fill this form :',
+	'password' => 'Your password',
+	'confirm-password' => 'Confirm your password',
+	'warning' => 'Warning',
+	'warning-password' => 'At least 8 characters',
+	'reset' => 'Password reminder',
+	'email-title' => 'Password reminder',
+	'email-intro'=> 'To reset your password ',
+	'email-link' => 'click on this link',
+	'email-expire' => 'This link will expire in ',
+	'minutes' => ' minutes'
 ];

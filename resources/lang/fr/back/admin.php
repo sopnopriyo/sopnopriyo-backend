@@ -2,19 +2,19 @@
 
 return [
 	'administration' => 'Administration',
-	'redaction' => 'Rédaction',
-	'home' => 'Retour sur le site',
-	'logout' => 'Déconnexion',
-	'dashboard' => 'Tableau de bord',
-	'users' => 'Utilisateurs',
-	'see-all' => 'Voir tous',
-	'add' => 'Ajouter',
+	'redaction' => 'Redaction',
+	'home' => 'Back on site',
+	'logout' => 'Logout',
+	'dashboard' => 'Dashboard',
+	'users' => 'users',
+	'see-all' => 'See all',
+	'add' => 'Add',
 	'messages' => 'Messages',
-	'comments' => 'Commentaires',
-	'medias' => 'Médias',
-	'posts' => 'Articles',
-	'new-messages' => 'Nouveaux messages !',
-	'new-registers' => 'Nouveaux inscrits !',
-	'new-posts' => 'Nouveaux articles !',
-	'new-comments' => 'Nouveaux commentaires !'
+	'comments' => 'Comments',
+	'medias' => 'Medias',
+	'posts' => 'Posts',
+	'new-messages' => 'New posts !',
+	'new-registers' => 'New users !',
+	'new-posts' => 'New posts !',
+	'new-comments' => 'New comments !'
 ];
