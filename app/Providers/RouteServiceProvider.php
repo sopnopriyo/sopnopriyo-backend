@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace Curso\Providers;
 
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -12,7 +12,7 @@ class RouteServiceProvider extends ServiceProvider {
 	 *
 	 * @var string
 	 */
-	protected $namespace = 'App\Http\Controllers';
+	protected $namespace = 'Curso\Http\Controllers';
 
 	/**
 	 * Define your route model bindings, pattern filters, etc.
@@ -24,14 +24,13 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 
-		$router->model('user', 'App\Models\User');
+		//
 	}
-
 
 	/**
 	 * Define the routes for the application.
 	 *
-	 * @param \Illuminate\Routing\Router $router
+	 * @param  \Illuminate\Routing\Router  $router
 	 * @return void
 	 */
 	public function map(Router $router)

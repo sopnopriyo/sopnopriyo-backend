@@ -1,36 +1,36 @@
-<?php
+<?php namespace Curso\Http\Controllers;
 
-namespace App\Http\Controllers;
+class HomeController extends Controller {
 
-use App\Jobs\ChangeLocale;
-use App\Slider;
-class HomeController extends Controller
-{
+	/*
+	|--------------------------------------------------------------------------
+	| Home Controller
+	|--------------------------------------------------------------------------
+	|
+	| This controller renders your application's "dashboard" for users that
+	| are authenticated. Of course, you are free to change or remove the
+	| controller as you wish. It is just here to get your app started!
+	|
+	*/
 
 	/**
-	 * Display the home page.
+	 * Create a new controller instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
+
+	/**
+	 * Show the application dashboard to the user.
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-
-		$sliders = Slider::all();
-		return view('front.index',compact('sliders'));
-	}
-
-	/**
-	 * Change language.
-	 *
-	 * @param  App\Jobs\ChangeLocaleCommand $changeLocaleCommand
-	 * @return Response
-	 */
-	public function language(
-		ChangeLocale $changeLocale)
-	{
-		$this->dispatch($changeLocale);
-
-		return redirect()->back();
+		return view('home');
 	}
 
 }

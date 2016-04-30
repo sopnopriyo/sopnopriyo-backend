@@ -1,64 +1,66 @@
-<?php
+<?php namespace Illuminate\Foundation\Providers;
 
-namespace Illuminate\Foundation\Providers;
-
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Request;
 
-class FormRequestServiceProvider extends ServiceProvider
-{
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
+class FormRequestServiceProvider extends ServiceProvider {
 
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->app['events']->listen('router.matched', function () {
-            $this->app->resolving(function (FormRequest $request, $app) {
-                $this->initializeRequest($request, $app['request']);
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function register()
+	{
+		//
+	}
 
-                $request->setContainer($app)->setRedirector($app->make(Redirector::class));
-            });
-        });
-    }
+	/**
+	 * Bootstrap the application events.
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->app['events']->listen('router.matched', function()
+		{
+			$this->app->resolving(function(FormRequest $request, $app)
+			{
+				$this->initializeRequest($request, $app['request']);
 
-    /**
-     * Initialize the form request with data from the given request.
-     *
-     * @param  \Illuminate\Foundation\Http\FormRequest  $form
-     * @param  \Symfony\Component\HttpFoundation\Request  $current
-     * @return void
-     */
-    protected function initializeRequest(FormRequest $form, Request $current)
-    {
-        $files = $current->files->all();
+				$request->setContainer($app)
+                        ->setRedirector($app['Illuminate\Routing\Redirector']);
+			});
+		});
+	}
 
-        $files = is_array($files) ? array_filter($files) : $files;
+	/**
+	 * Initialize the form request with data from the given request.
+	 *
+	 * @param  \Illuminate\Foundation\Http\FormRequest  $form
+	 * @param  \Symfony\Component\HttpFoundation\Request  $current
+	 * @return void
+	 */
+	protected function initializeRequest(FormRequest $form, Request $current)
+	{
+		$files = $current->files->all();
 
-        $form->initialize(
-            $current->query->all(), $current->request->all(), $current->attributes->all(),
-            $current->cookies->all(), $files, $current->server->all(), $current->getContent()
-        );
+		$files = is_array($files) ? array_filter($files) : $files;
 
-        if ($session = $current->getSession()) {
-            $form->setSession($session);
-        }
+		$form->initialize(
+			$current->query->all(), $current->request->all(), $current->attributes->all(),
+			$current->cookies->all(), $files, $current->server->all(), $current->getContent()
+		);
 
-        $form->setUserResolver($current->getUserResolver());
+		if ($session = $current->getSession())
+		{
+			$form->setSession($session);
+		}
 
-        $form->setRouteResolver($current->getRouteResolver());
-    }
+		$form->setUserResolver($current->getUserResolver());
+
+		$form->setRouteResolver($current->getRouteResolver());
+	}
+
 }

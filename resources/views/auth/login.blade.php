@@ -1,45 +1,62 @@
-@extends('front.template')
+@extends('template.main')
+@section('id'){{'log'}}@endsection
+@section('content')
+<section id="logbox">
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="panel panel-default">
+					<h5 class="panel-heading text-center"><i class="fa fa-lock"></i> Login</h5>
+					<div class="panel-body">
+						@if (count($errors) > 0)
+							<div class="alert alert-danger">
+								<strong>Whoops!</strong> There were some problems with your input.<br><br>
+								<ul>
+									@foreach ($errors->all() as $error)
+										<li>{{ $error }}</li>
+									@endforeach
+								</ul>
+							</div>
+						@endif
 
-@section('main')
-<div class="container">
-	<div class="row">
-		<div class="box">
-			<div class="col-lg-12">
-				@if(session()->has('error'))
-					@include('partials/error', ['type' => 'danger', 'message' => session('error')])
-				@endif	
-				<hr>	
-				<h2 class="intro-text text-center">{{ trans('front/login.connection') }}</h2>
-				<hr>
-				<p>{{ trans('front/login.text') }}</p>				
-				
-				{!! Form::open(['url' => 'auth/login', 'method' => 'post', 'role' => 'form']) !!}	
-				
-				<div class="row">
+						<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-					{!! Form::control('text', 6, 'log', $errors, trans('front/login.log')) !!}
-					{!! Form::control('password', 6, 'password', $errors, trans('front/login.password')) !!}
-					{!! Form::submit(trans('front/form.send'), ['col-lg-12']) !!}
-					{!! Form::check('memory', trans('front/login.remind')) !!}
-					<div class="col-lg-12">					
-						{!! link_to('password/email', trans('front/login.forget')) !!}
+							<div class="form-group">
+								<label class="col-md-4 control-label"><i class="fa fa-envelope fa-2x"></i></label>
+								<div class="col-md-6">
+									<input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-md-4 control-label"><i class="fa fa-key fa-2x"></i></label>
+								<div class="col-md-6">
+									<input type="password" class="form-control" name="password" placeholder="Password">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-md-6 col-md-offset-4">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="remember"> Remember Me
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-md-8 col-md-offset-2">
+									<button type="submit" class="btn btn-primary btn-block"><i class="fa fa-sign-in"></i> Signin</button>
+								</div>
+							</div>
+						</form>
 					</div>
-
 				</div>
-				
-				{!! Form::close() !!}
-
-				<div class="text-center">
-					<hr>
-						<h2 class="intro-text text-center">{{ trans('front/login.register') }}</h2>
-					<hr>	
-					<p>{{ trans('front/login.register-info') }}</p>
-					{!! link_to('auth/register', trans('front/login.registering'), ['class' => 'btn btn-default']) !!}
-				</div>
-
 			</div>
 		</div>
 	</div>
-</div>
-@stop
+</section>
 
+@endsection

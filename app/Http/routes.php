@@ -1,85 +1,67 @@
 <?php
 
-// Home
 Route::get('/', [
-	'uses' => 'HomeController@index', 
+	'uses' => 'WelcomeController@index',
 	'as' => 'home'
 ]);
-Route::get('language', 'HomeController@language');
 
-
-// Admin
-Route::get('admin', [
-	'uses' => 'AdminController@admin',
-	'as' => 'admin',
-	'middleware' => 'admin'
+Route::get('articulos/{slug}', [
+	'as' => 'article',
+	'uses' => 'WelcomeController@article'
 ]);
 
-Route::get('medias', [
-	'uses' => 'AdminController@filemanager',
-	'as' => 'medias',
-	'middleware' => 'redac'
+Route::get('/tag/{tag}', [
+	'as' => 'tagged',
+	'uses' => 'WelcomeController@tags'
 ]);
 
-//Slider
-//Route::resource('slider', 'SliderController');
-
-Route::group(['middleware' => 'auth'], function(){
-	Route::resource('slider', 'SliderController');
-});
-
-// Our service
-
-Route::get('services', function () {
-    return view('front.services');
-});
-
-Route::get('portfolio', function () {
-    return view('front.portfolio');
-});
-
-//About Us
-Route::get('about-us', function () {
-    return view('front.about-us');
-});
-
-// Blog
-Route::get('blog/order', ['uses' => 'BlogController@indexOrder', 'as' => 'blog.order']);
-Route::get('articles', 'BlogController@indexFront');
-Route::get('blog/tag', 'BlogController@tag');
-Route::get('blog/search', 'BlogController@search');
-
-Route::put('postseen/{id}', 'BlogController@updateSeen');
-Route::put('postactive/{id}', 'BlogController@updateActive');
-
-Route::resource('blog', 'BlogController');
-
-// Comment
-Route::resource('comment', 'CommentController', [
-	'except' => ['create', 'show']
+Route::get('/admin', [
+	'as' => 'adminsite',
+	'uses' => 'AdminController@desktop'
 ]);
 
-Route::put('commentseen/{id}', 'CommentController@updateSeen');
-Route::put('uservalid/{id}', 'CommentController@valid');
+Route::get('/desktop', 'AdminController@desktop');
 
+Route::get('admin/posts/{id}/edit', 'AdminController@edit');
 
-// Contact
-Route::resource('contact', 'ContactController', [
-	'except' => ['show', 'edit']
+Route::post('admin/posts/{id}/refresh', 'AdminController@refresh');
+
+Route::get('admin/posts/new', [
+	'as' => 'nuevo',
+	'uses' => 'AdminController@nuevo'
 ]);
 
+Route::get('admin/posts/{id}/delete', 'AdminController@delete');
 
-// User
-Route::get('user/sort/{role}', 'UserController@indexSort');
+Route::post('admin/posts/new', 'AdminController@crear');
 
-Route::get('user/roles', 'UserController@getRoles');
-Route::post('user/roles', 'UserController@postRoles');
+Route::get('/logout', [
+	'uses' => 'AdminController@logout',
+	'as' => 'logout'
+]);
 
-Route::put('userseen/{user}', 'UserController@updateSeen');
+/* Social Media Routes */
 
-Route::resource('user', 'UserController');
+Route::get('twitter', [
+	'as' => 'twitter',
+	'uses' => 'WelcomeController@twitter'
+]);
 
-// Auth
+Route::get('facebook', [
+	'as' => 'facebook',
+	'uses' => 'WelcomeController@facebook'
+]);
+
+Route::get('youtube', [
+	'as' => 'youtube',
+	'uses' => 'WelcomeController@youtube'
+]);
+
+Route::get('linkedin', [
+	'as' => 'linkedin',
+	'uses' => 'WelcomeController@linkedin'
+]);
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

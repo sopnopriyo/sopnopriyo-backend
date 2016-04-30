@@ -1,61 +1,77 @@
-<?php namespace App\Http\Controllers;
+<?php namespace Curso\Http\Controllers;
 
-use App\Repositories\ContactRepository;
-use App\Repositories\UserRepository;
-use App\Repositories\BlogRepository;
-use App\Repositories\CommentRepository;
+use Curso\Http\Requests;
+use Curso\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use Curso\Post;
 
 class AdminController extends Controller {
 
-    /**
-     * The UserRepository instance.
-     *
-     * @var App\Repositories\UserRepository
-     */
-    protected $user_gestion;
-
-    /**
-     * Create a new AdminController instance.
-     *
-     * @param  App\Repositories\UserRepository $user_gestion
-     * @return void
-     */
-    public function __construct(UserRepository $user_gestion)
-    {
-		$this->user_gestion = $user_gestion;
-    }
-
-	/**
-	* Show the admin panel.
-	*
-	* @param  App\Repositories\ContactRepository $contact_gestion
-	* @param  App\Repositories\BlogRepository $blog_gestion
-	* @param  App\Repositories\CommentRepository $comment_gestion
-	* @return Response
-	*/
-	public function admin(
-		ContactRepository $contact_gestion, 
-		BlogRepository $blog_gestion,
-		CommentRepository $comment_gestion)
-	{	
-		$nbrMessages = $contact_gestion->getNumber();
-		$nbrUsers = $this->user_gestion->getNumber();
-		$nbrPosts = $blog_gestion->getNumber();
-		$nbrComments = $comment_gestion->getNumber();
-
-		return view('back.index', compact('nbrMessages', 'nbrUsers', 'nbrPosts', 'nbrComments'));
+	public function __construct(){
+		$this->middleware('auth');
 	}
 
-	/**
-	 * Show the media panel.
-	 *
-     * @return Response
-	 */
-	public function filemanager()
-	{
-		$url = config('medias.url');
+	public function desktop(){
+		$posts = \DB::table('posts')->orderBy('id', 'desc')->paginate(10);
+		return view('desktop')
+		->with('posts', $posts);
+	}
+
+	public function logout(){
 		
-		return view('back.filemanager', compact('url'));
+		\Auth::logout();
+
+		return \Redirect::route('home');
+	}
+
+	public function edit($id){
+		$post = Post::find($id);
+
+		return view('edit')
+		->with ('post', $post);
+	}
+
+	public function refresh($id){
+		
+		$p = Post::find($id);
+
+		$p->title = \Input::get('title');
+		$p->content = \Input::get('content');
+		$p->tags = \Input::get('tags');
+		$p->photo = \Input::get('photo');
+		$p->resluggify();
+		$p->save();
+
+		return \Redirect::route('adminsite');
+	}
+
+	public function nuevo(){
+
+		return view('nuevo');	
+
+	}
+
+	public function crear(){
+
+		$p = new Post;
+
+		$p->title = \Input::get('title');
+		$p->content = \Input::get('content');
+		$p->tags = \Input::get('tags');
+		$p->photo = \Input::get('photo');
+		$p->save();
+
+		return \Redirect::route('adminsite')
+		->with('alert', 'Post has been created successfully!');
+
+	}
+
+	public function delete($id){
+
+		$post = Post::find($id)->delete();
+
+		return \Redirect::route('adminsite');
 	}
 
 }
