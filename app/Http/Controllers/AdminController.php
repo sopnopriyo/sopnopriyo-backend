@@ -43,7 +43,8 @@ class AdminController extends Controller {
 		$p->resluggify();
 		$p->save();
 
-		return \Redirect::route('adminsite');
+		return \Redirect::route('adminsite')
+		->with('alert', 'Post has been edited successfully!');
 	}
 
 	public function nuevo(){
@@ -71,7 +72,8 @@ class AdminController extends Controller {
 
 		$post = Post::find($id)->delete();
 
-		return \Redirect::route('adminsite');
+		return \Redirect::route('adminsite')
+		->with('alert', 'Post has been deleted successfully!');
 	}
 
 }
