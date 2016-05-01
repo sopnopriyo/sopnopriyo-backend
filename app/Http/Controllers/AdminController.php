@@ -47,13 +47,13 @@ class AdminController extends Controller {
 		->with('alert', 'Post has been edited successfully!');
 	}
 
-	public function nuevo(){
+	public function create(){
 
 		return view('nuevo');	
 
 	}
 
-	public function crear(){
+	public function store(){
 
 		$p = new Post;
 

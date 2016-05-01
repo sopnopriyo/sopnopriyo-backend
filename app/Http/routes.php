@@ -30,12 +30,12 @@ Route::post('admin/posts/{id}/refresh', 'AdminController@refresh');
 
 Route::get('admin/posts/new', [
 	'as' => 'nuevo',
-	'uses' => 'AdminController@nuevo'
+	'uses' => 'AdminController@create'
 ]);
 
 Route::get('admin/posts/{id}/delete', 'AdminController@delete');
 
-Route::post('admin/posts/new', 'AdminController@crear');
+Route::post('admin/posts/new', 'AdminController@store');
 
 Route::get('/logout', [
 	'uses' => 'AdminController@logout',
