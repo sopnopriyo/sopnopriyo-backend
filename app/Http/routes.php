@@ -15,12 +15,14 @@ Route::get('/tag/{tag}', [
 	'uses' => 'WelcomeController@tags'
 ]);
 
-Route::get('/admin', [
-	'as' => 'adminsite',
-	'uses' => 'AdminController@desktop'
-]);
+// Route::get('/desktop', 'AdminController@desktop');
 
-Route::get('/desktop', 'AdminController@desktop');
+/* Admin Panel */
+
+Route::get('/admin/blog', [
+	'as' => 'adminsite',
+	'uses' => 'AdminController@index'
+]);
 
 Route::get('admin/posts/{id}/edit', 'AdminController@edit');
 

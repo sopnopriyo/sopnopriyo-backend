@@ -12,9 +12,9 @@ class AdminController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function desktop(){
+	public function index(){
 		$posts = \DB::table('posts')->orderBy('id', 'desc')->paginate(10);
-		return view('desktop')
+		return view('blog')
 		->with('posts', $posts);
 	}
 

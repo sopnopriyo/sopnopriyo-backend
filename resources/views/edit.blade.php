@@ -1,23 +1,13 @@
-@extends('template.main')
-@section('title'){{ 'Edit a post | ' . $post->title }}@endsection
+@extends('admin.template')
+@section('title'){{ 'Hello | ' . Auth::user()->username }}@endsection
 @section('content')
-	@include('template.partials.logbar')
-	<div class="row-fluid">
-		<div class="container">
-			<div class="jumbotron">
-				<h1 class="text-center">
-					Edit the post
-				</h1>
-			</div>
-		</div>
-		<div class="container">
-			<div class="col-md-2"></div>
-			<div class="col-md-8">
+			
+			<div class="col-md-12">
 				{!! Form::open(['url' => 'admin/posts/'.$post->id.'/refresh', 'autocomplete' => 'off']) !!}
 					<fieldset>
 						<input type="text" name="title" value="{{$post->title}}" class="form-control">
 						<br>
-						<textarea name="content" id="editor" cols="30" rows="15" class="form-control">
+						<textarea name="content" id="editor" cols="15" rows="10" class="form-control">
 							{{$post->content}}
 						</textarea>
 						<br>
@@ -29,11 +19,8 @@
 					</fieldset>
 				{!! Form::close() !!}
 			</div>
-			<div class="col-md-2"></div>
-		</div>
-	</div>
-	<br><br>
-	@include('template.partials.footer')
+			
+		<br><br>
 @endsection
 @section('js')
 	<script>
