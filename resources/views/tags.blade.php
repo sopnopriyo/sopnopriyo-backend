@@ -1,10 +1,10 @@
 @extends('template.main')
-@section('title'){{'Contenido de etiqueta | Larablog'}}@endsection
+@section('title'){{'Articles on tag | Sopnopriyo'}}@endsection
 @section('content')
 	<div class="row-fluid" id="tag">
 		<div class="blur">
 			<div id="tagged" class="croisant">
-				Articulos etiquetados con {{$tag}}
+				Articles tagged with {{$tag}}
 			</div>
 		</div>
 	</div>
@@ -21,7 +21,7 @@
 		<div class="col-md-4 tgs" id="bhome">
 			<div class="blur">
 				<div id="taggex" class="croisant">
-					<a href="{{route('home')}}" style="color: white;">Regresar a <br>127.0.0.1</a>
+					<a href="{{route('home')}}" style="color: white;">Sample one </a>
 				</div>			
 			</div>
 		</div>

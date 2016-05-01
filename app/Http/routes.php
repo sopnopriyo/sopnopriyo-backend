@@ -5,7 +5,7 @@ Route::get('/', [
 	'as' => 'home'
 ]);
 
-Route::get('articulos/{slug}', [
+Route::get('article/{slug}', [
 	'as' => 'article',
 	'uses' => 'WelcomeController@article'
 ]);

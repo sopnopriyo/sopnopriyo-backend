@@ -47,7 +47,7 @@
 						</div>
 						<br>
 						<div align="center">
-							<a href='articulos/{{$p->slug}}'class="btn btn-info">Read More:</a>
+							<a href='article/{{$p->slug}}'class="btn btn-info">Read More:</a>
 						</div> 					
 						<hr>
 					@endforeach
