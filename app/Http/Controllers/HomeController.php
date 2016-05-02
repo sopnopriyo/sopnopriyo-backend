@@ -2,35 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ChangeLocale;
-use App\Slider;
+use App\Http\Requests;
+use Illuminate\Http\Request;
+
 class HomeController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
-	/**
-	 * Display the home page.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-
-		$sliders = Slider::all();
-		return view('front.index',compact('sliders'));
-	}
-
-	/**
-	 * Change language.
-	 *
-	 * @param  App\Jobs\ChangeLocaleCommand $changeLocaleCommand
-	 * @return Response
-	 */
-	public function language(
-		ChangeLocale $changeLocale)
-	{
-		$this->dispatch($changeLocale);
-
-		return redirect()->back();
-	}
-
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('home');
+    }
 }

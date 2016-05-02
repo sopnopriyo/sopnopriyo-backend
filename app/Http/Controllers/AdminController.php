@@ -1,61 +1,83 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\Repositories\ContactRepository;
-use App\Repositories\UserRepository;
-use App\Repositories\BlogRepository;
-use App\Repositories\CommentRepository;
+namespace App\Http\Controllers;
 
-class AdminController extends Controller {
+use Illuminate\Http\Request;
 
-    /**
-     * The UserRepository instance.
-     *
-     * @var App\Repositories\UserRepository
-     */
-    protected $user_gestion;
+use App\Http\Requests;
 
-    /**
-     * Create a new AdminController instance.
-     *
-     * @param  App\Repositories\UserRepository $user_gestion
-     * @return void
-     */
-    public function __construct(UserRepository $user_gestion)
-    {
-		$this->user_gestion = $user_gestion;
-    }
+use App\Post;
 
-	/**
-	* Show the admin panel.
-	*
-	* @param  App\Repositories\ContactRepository $contact_gestion
-	* @param  App\Repositories\BlogRepository $blog_gestion
-	* @param  App\Repositories\CommentRepository $comment_gestion
-	* @return Response
-	*/
-	public function admin(
-		ContactRepository $contact_gestion, 
-		BlogRepository $blog_gestion,
-		CommentRepository $comment_gestion)
-	{	
-		$nbrMessages = $contact_gestion->getNumber();
-		$nbrUsers = $this->user_gestion->getNumber();
-		$nbrPosts = $blog_gestion->getNumber();
-		$nbrComments = $comment_gestion->getNumber();
 
-		return view('back.index', compact('nbrMessages', 'nbrUsers', 'nbrPosts', 'nbrComments'));
+class AdminController extends Controller
+{
+	
+    
+    public function __construct(){
+		$this->middleware('auth');
 	}
 
-	/**
-	 * Show the media panel.
-	 *
-     * @return Response
-	 */
-	public function filemanager()
-	{
-		$url = config('medias.url');
+	public function index(){
+		$posts = \DB::table('posts')->orderBy('id', 'desc')->paginate(10);
+		return view('admin.blog')
+		->with('posts', $posts);
+	}
+
+	
+
+	public function edit($id){
+		$post = Post::find($id);
+
+		return view('admin.edit')
+		->with ('post', $post);
+	}
+
+	public function refresh(Request $request,$id){
 		
-		return view('back.filemanager', compact('url'));
+		
+
+		$p = Post::find($id);
+
+		$p->title = $request->input('title');
+		$p->content = $request->input('content');
+		$p->tags = $request->input('tags');
+		$p->photo = $request->input('photo');
+		$p->resluggify();
+		$p->save();
+
+		return redirect('admin/blog')
+		->with('alert', 'Post has been edited successfully!');
 	}
 
+	public function create(){
+
+		return view('admin.new');	
+
+	}
+
+	public function store(Request $request){
+
+		
+
+		$p = new Post;
+
+		$p->title = $request->input('title');
+		$p->content = $request->input('content');
+		$p->tags = $request->input('tags');
+		$p->photo = $request->input('photo');
+		$p->slug = createSlug($request->input('title'));
+		$p->save();
+
+		return redirect('/admin/blog')
+		->with('alert', 'Post has been created successfully!');
+
+	}
+
+	public function delete($id){
+
+		$post = Post::find($id)->delete();
+
+		return redirect('/admin/blog')
+		->with('alert', 'Post has been deleted successfully!');
+	}
 }

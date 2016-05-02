@@ -1,86 +1,41 @@
 <?php
 
-// Home
-Route::get('/', [
-	'uses' => 'HomeController@index', 
-	'as' => 'home'
-]);
-Route::get('language', 'HomeController@language');
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register all of the routes for an application.
+| It's a breeze. Simply tell Laravel the URIs it should respond to
+| and give it the controller to call when that URI is requested.
+|
+*/
 
-
-// Admin
-Route::get('admin', [
-	'uses' => 'AdminController@admin',
-	'as' => 'admin',
-	'middleware' => 'admin'
-]);
-
-Route::get('medias', [
-	'uses' => 'AdminController@filemanager',
-	'as' => 'medias',
-	'middleware' => 'redac'
-]);
-
-//Slider
-//Route::resource('slider', 'SliderController');
-
-Route::group(['middleware' => 'auth'], function(){
-	Route::resource('slider', 'SliderController');
+Route::get('/', function () {
+    return view('welcome');
 });
 
-// Our service
+Route::auth();
 
-Route::get('services', function () {
-    return view('front.services');
-});
+Route::get('/home', 'HomeController@index');
 
-Route::get('portfolio', function () {
-    return view('front.portfolio');
-});
 
-//About Us
-Route::get('about-us', function () {
-    return view('front.about-us');
-});
-
-// Blog
-Route::get('blog/order', ['uses' => 'BlogController@indexOrder', 'as' => 'blog.order']);
-Route::get('articles', 'BlogController@indexFront');
-Route::get('blog/tag', 'BlogController@tag');
-Route::get('blog/search', 'BlogController@search');
-
-Route::put('postseen/{id}', 'BlogController@updateSeen');
-Route::put('postactive/{id}', 'BlogController@updateActive');
-
-Route::resource('blog', 'BlogController');
-
-// Comment
-Route::resource('comment', 'CommentController', [
-	'except' => ['create', 'show']
+Route::get('/admin/blog', [
+	'as' => 'home',
+	'uses' => 'AdminController@index'
 ]);
 
-Route::put('commentseen/{id}', 'CommentController@updateSeen');
-Route::put('uservalid/{id}', 'CommentController@valid');
+Route::get('admin/posts/{id}/edit', 'AdminController@edit');
 
+Route::post('admin/posts/{id}/refresh', 'AdminController@refresh');
 
-// Contact
-Route::resource('contact', 'ContactController', [
-	'except' => ['show', 'edit']
+Route::get('admin/posts/new', [
+	'as' => 'nuevo',
+	'uses' => 'AdminController@create'
 ]);
 
+Route::get('admin/posts/{id}/delete', 'AdminController@delete');
 
-// User
-Route::get('user/sort/{role}', 'UserController@indexSort');
+Route::post('admin/posts/new', 'AdminController@store');
 
-Route::get('user/roles', 'UserController@getRoles');
-Route::post('user/roles', 'UserController@postRoles');
 
-Route::put('userseen/{user}', 'UserController@updateSeen');
-
-Route::resource('user', 'UserController');
-
-// Auth
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
