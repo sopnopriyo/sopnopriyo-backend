@@ -215,7 +215,7 @@
                    <input type="text" name="email" placeholder="Email">
                    <textarea  name="message" placeholder="Message"></textarea>
                    <div class="form-group">
-                        {!! Form::submit('Login', ['class' => 'btn btn-primary btn-block']) !!}
+                        {!! Form::submit('Submit', ['class' => 'btn btn-primary btn-block']) !!}
                     </div>
                 {!! Form::close() !!}
                </div>

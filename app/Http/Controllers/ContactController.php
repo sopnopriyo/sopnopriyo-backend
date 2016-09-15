@@ -12,6 +12,13 @@ use Validator;
 class ContactController extends Controller
 {
 
+
+    public function index(){
+
+        $messages = Contact::orderBy('created_at', 'desc')->paginate(8);
+
+        return view('message')->with('messages',$messages);
+    }
   
   	public function store(Request $request)
     {
