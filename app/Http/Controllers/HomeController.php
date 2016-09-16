@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $numberOfContact = Contact->count();
-        return view('home');
+        $contacts = Contact::count();
+        return view('home')->with('contacts',$contacts);
     }
 }

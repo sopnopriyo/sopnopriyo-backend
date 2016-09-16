@@ -51,4 +51,16 @@ class ContactController extends Controller
         return redirect('/#contact')->withInput();
     }
 
+    public function destroy(Request $request, $id){
+
+        $contact = Contact::find($id);
+
+        $contact->delete();
+        
+        $request->session()->flash('alert-success', 'Message has been deleted successfully !');
+        return redirect('/message')->withInput();
+
+
+    }
+
 }

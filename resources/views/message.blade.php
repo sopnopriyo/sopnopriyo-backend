@@ -15,6 +15,14 @@
       <h4><small>Recent Messages</small></h4>
       <hr>
       
+       <div class="flash-message">
+              @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                @if(Session::has('alert-' . $msg))
+
+                <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+                @endif
+              @endforeach
+            </div>
     <table class="table">
     <thead>
       <tr>
@@ -22,6 +30,7 @@
         <th>Email</th>
         <th>Message</th>
         <th>Date</th>
+        <th>Operation</th>
       </tr>
     </thead>
     <tbody>
@@ -31,7 +40,15 @@
         <td>{{ $message->email }}</td>
         <td>{{ $message->message }}</td>
         <td>{{ $message->created_at }}</td>
-      </tr>
+        <td>
+            {!! Form::open(['url' => 'message/'.$message->id,'autocomplete' => 'off']) !!}
+            
+             <fieldset>
+            <input type="submit" value="Edit" class="btn btn-block btn-primary">
+          </fieldset>
+        {!! Form::close() !!}
+        </td>
+       </tr>
     @endforeach
     
     </tbody>

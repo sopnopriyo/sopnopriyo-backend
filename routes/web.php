@@ -22,3 +22,5 @@ Route::get('/dashboard', 'HomeController@index');
 Route::post('/contact', 'ContactController@store');
 
 Route::get('/message', 'ContactController@index')->middleware('auth');;
+
+Route::post('/message/{id}', 'ContactController@destroy')->middleware('auth');

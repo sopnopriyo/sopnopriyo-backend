@@ -14,7 +14,8 @@
     <div class="col-sm-9">
       <h4><small>Dashboard</small></h4>
       <hr>
-      <h2></h2>
+      <h2>Total number of messages : <mark>{{$contacts}}</mark></h2>
+      
       
 
     </div>
