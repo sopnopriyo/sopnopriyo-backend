@@ -44,7 +44,7 @@
             {!! Form::open(['url' => 'message/'.$message->id,'autocomplete' => 'off']) !!}
             
              <fieldset>
-            <input type="submit" value="Edit" class="btn btn-block btn-primary">
+            <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-block btn-primary">
           </fieldset>
         {!! Form::close() !!}
         </td>
