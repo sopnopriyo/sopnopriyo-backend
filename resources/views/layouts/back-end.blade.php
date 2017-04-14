@@ -14,7 +14,7 @@
 <!-- Custom Theme files -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }>
+
 </script>
 <script>
         window.Laravel = <?php echo json_encode([
@@ -35,26 +35,7 @@
             });
 </script>
 <!-- //end-smoth-scrolling -->  
-<!---pop-up-box---->
-                    <link href="css/popuo-box.css" rel="stylesheet" type="text/css" media="all"/>
-                    <script src="{{ URL::asset('js/jquery.magnific-popup.js') }}" type="text/javascript"></script>
-                    <!---//pop-up-box---->
-                     <script>
-                        $(document).ready(function() {
-                        $('.popup-with-zoom-anim').magnificPopup({
-                            type: 'inline',
-                            fixedContentPos: false,
-                            fixedBgPos: true,
-                            overflowY: 'auto',
-                            closeBtnInside: true,
-                            preloader: false,
-                            midClick: true,
-                            removalDelay: 300,
-                            mainClass: 'my-mfp-zoom-in'
-                        });
-                                                                                        
-                        });
-                </script>
+
 </head>
 <body>
     <div id="app">
@@ -130,8 +111,11 @@
               <button type="button" class="close" data-dismiss="modal" onclick="closeNav()" aria-label="Close"><span aria-hidden="true" >&times; Close</span></button>
               <a href="/dashboard">Dashboard</a>
               <a href="/message">Message</a>
-              <a href="#">Clients</a>
-              <a href="#">Contact</a>
+              <a href="/all-posts">All Posts</a>
+              <a href="/new-post">New Post</a>
+              
+
+
             </div>
 
         @yield('content')
@@ -140,5 +124,6 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
       <script src="{{ asset('js/custom.js') }}"></script>
+
 </body>
 </html>

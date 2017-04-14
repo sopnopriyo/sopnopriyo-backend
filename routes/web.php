@@ -26,3 +26,26 @@ Route::get('/dashboard', 'HomeController@index')->middleware('auth');
 Route::post('/contact', 'ContactController@store');
 Route::get('/message', 'ContactController@index')->middleware('auth');
 Route::post('/message/{id}', 'ContactController@destroy')->middleware('auth');
+
+Route::group(['middleware' => ['auth']], function()
+{
+	// show new post form
+	Route::get('new-post','PostController@create');
+	
+	// save new post
+	Route::post('new-post','PostController@store');
+	
+	// edit post form
+	Route::get('edit/{slug}',['as' => 'post.edit', 'uses' => 'PostController@edit']);
+
+	// update post
+	Route::post('update','PostController@update');
+	
+	// delete post
+	Route::get('delete/{id}',['as' => 'post.delete', 'uses' => 'PostController@destroy']);
+	
+	// display user's all posts
+	Route::get('all-posts','PostController@index');
+
+	
+});
