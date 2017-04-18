@@ -19,6 +19,19 @@ class PostController extends Controller {
 		$title = 'Latest Posts';
 		return view('posts.index')->withPosts($posts)->withTitle($title);
 	}
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function posts()
+	{
+		$posts = Posts::orderBy('created_at','desc')->paginate(5);
+		$title = 'Latest Posts';
+		return view('posts.frontEndBlog')->withPosts($posts)->withTitle($title);
+	}
+
 	/**
 	 * Show the form for creating a new resource.
 	 *

@@ -27,6 +27,10 @@ Route::post('/contact', 'ContactController@store');
 Route::get('/message', 'ContactController@index')->middleware('auth');
 Route::post('/message/{id}', 'ContactController@destroy')->middleware('auth');
 
+Route::get('/blog', 'PostController@posts');
+Route::get('/blog/{slug}', 'PostController@show');
+
+
 Route::group(['middleware' => ['auth']], function()
 {
 	// show new post form

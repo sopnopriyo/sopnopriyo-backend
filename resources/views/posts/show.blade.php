@@ -1,52 +1,30 @@
-@extends('layouts.back-end')
+@extends('layouts.front-end')
 
 
 @section('content')
 
-@if($post)
-	<div>
-		{!! $post->body !!}
-	</div>	
-	<div>
-		<h2>Leave a comment</h2>
-	</div>
-	@if(Auth::guest())
-		<p>Login to Comment</p>
-	@else
-		<div class="panel-body">
-			<form method="post" action="/comment/add">
-				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-				<input type="hidden" name="on_post" value="{{ $post->id }}">
-				<input type="hidden" name="slug" value="{{ $post->slug }}">
-				<div class="form-group">
-					<textarea required="required" placeholder="Enter comment here" name = "body" class="form-control"></textarea>
-				</div>
-				<input type="submit" name='post_comment' class="btn btn-success" value = "Post"/>
-			</form>
-		</div>
-	@endif
-	
-	<div>
-		@if($comments)
-		<ul style="list-style: none; padding: 0">
-			@foreach($comments as $comment)
-				<li class="panel-body">
-					<div class="list-group">
-						<div class="list-group-item">
-							<h3>{{ $comment->author->name }}</h3>
-							<p>{{ $comment->created_at->format('M d,Y \a\t h:i a') }}</p>
-						</div>
-						<div class="list-group-item">
-							<p>{{ $comment->body }}</p>
-						</div>
-					</div>
-				</li>
-			@endforeach
-		</ul>
-		@endif
-	</div>
-@else
-404 error
-@endif
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=1071898526165813";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
+<div class="container">
+
+	@if($post)
+		<div>
+			{!! $post->body !!}
+		</div>	
+		<div>
+			<h2>Leave a comment</h2>
+		</div>
+		<div class="fb-comments" data-href="http://sopnopriyo.com/blog/{!! $post->slug !!}" data-numposts="5"></div>
+	@else
+	404 error
+	@endif
+
+</div>
 @endsection
