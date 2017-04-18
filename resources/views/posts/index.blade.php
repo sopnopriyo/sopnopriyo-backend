@@ -38,7 +38,7 @@
             @foreach ($posts as $post)
             <tr  class="warning">
               <td class="text-primary"><strong>{{ $post->title }}</strong></td>
-              <td>{{ $post->created_at }}</td> 
+              <td>{{ date('d-m-Y', strtotime($post->created_at)) }}</td> 
               <td>{!! Form::checkbox('active', $post->active, $post->active) !!}</td>
               <td>{!! link_to_route('post.edit', trans('Edit'), [$post->slug], ['class' => 'btn btn-warning btn-block']) !!}</td>
               <td>{!! link_to_route('post.delete', trans('Delete'), [$post->id], ['class' => 'btn btn-danger btn-block']) !!}</td>

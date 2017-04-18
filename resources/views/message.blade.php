@@ -31,7 +31,7 @@
         <td>{{ $message->name }}</td>
         <td>{{ $message->email }}</td>
         <td>{{ $message->message }}</td>
-        <td>{{ $message->created_at }}</td>
+        <td>{{ date('d-m-Y', strtotime($message->created_at)) }}</td>
         <td>
             {!! Form::open(['url' => 'message/'.$message->id,'autocomplete' => 'off']) !!}
             

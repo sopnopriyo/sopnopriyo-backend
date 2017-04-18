@@ -5,32 +5,7 @@
 <div class="header">
    <div class="container">
         <div class="header-top">    
-            <div class="search">        
-                          <a class="play-icon popup-with-zoom-anim" href="#small-dialog"><i> </i></a>
-                    </div>
-                     <div id="small-dialog" class="mfp-hide">
-                        <div class="search-top">
-                            <div class="login">
-                                <input type="submit" value="">
-                                <input type="text" value="Search Here..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}">     
-                            </div>
-                            
-                        </div>              
-                    </div>
-             <div class="top-navg">
-                       <span class="menu"> <img src="images/icon.png" alt=""/></span>
-            
-
-                    <!-- script-for-menu -->
-                         <script>
-                           $( "span.menu" ).click(function() {
-                             $( "ul.res" ).slideToggle( 300, function() {
-                             // Animation complete.
-                              });
-                             });
-                        </script>
-                <!-- /script-for-menu -->
-           </div>
+          
                         
                 <div class="clearfix"> </div>
               </div>
@@ -163,21 +138,7 @@
             </ul>
             <div class="clearfix"> </div>
         </div>
-        <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            /*
-                                            var defaults = {
-                                                containerID: 'toTop', // fading element id
-                                                containerHoverID: 'toTopHover', // fading element hover id
-                                                scrollSpeed: 1200,
-                                                easingType: 'linear' 
-                                            };
-                                            */
-                                            
-                                            $().UItoTop({ easingType: 'easeOutQuart' });
-                                            
-                                        });
-                                    </script>
+    
                         <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 
     </div>
@@ -186,7 +147,7 @@
 
 <br><br> <br>
 <center>
- <p>© 2016 , Developed by Shahin </a></p>
+ <p> 2017 , Developed by Shahin </a></p>
 </center> 
 
 @endsection

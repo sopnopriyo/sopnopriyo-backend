@@ -60,9 +60,10 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a class="scroll active" href="#home">Home</a></li> 
-                        <li><a class="scroll" href="#about">About</a></li> 
-                        <li><a class="scroll" href="#contact">Contact</a></li> 
+                        <li><a href="/dashboard">Dashboard</a></li> 
+                        <li> <a href="/message">Message</a></li> 
+                        <li><a href="/all-posts">All Posts</a></li> 
+                        <li><a href="/new-post">New Post</a></li> 
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -106,24 +107,13 @@
             </div>
         </nav>
 
-        
-           <div id="mySidenav" class="sidenav">
-              <button type="button" class="close" data-dismiss="modal" onclick="closeNav()" aria-label="Close"><span aria-hidden="true" >&times; Close</span></button>
-              <a href="/dashboard">Dashboard</a>
-              <a href="/message">Message</a>
-              <a href="/all-posts">All Posts</a>
-              <a href="/new-post">New Post</a>
-              
-
-
-            </div>
 
         @yield('content')
     </div>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-      <script src="{{ asset('js/custom.js') }}"></script>
+    
 
 </body>
 </html>
