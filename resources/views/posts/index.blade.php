@@ -10,6 +10,9 @@
 	        {{ session('message') }}
 	    </div>
 	@endif
+    <div>
+      <a href="/new-post" class="btn btn-primary" role="button" >New Post</a>
+    </div>
     <div class="table-responsive">
       <table class="table">
         <thead>

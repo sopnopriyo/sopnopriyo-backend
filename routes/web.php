@@ -11,26 +11,29 @@
 |
 */
 
+//authentication routes
 Auth::routes();
 
+//homepage route
 Route::get('/', function () {
     return view('welcome');
 });
 
+//homepage route
 Route::get('/home', function () {
     return view('welcome');
 });
 
-
-Route::get('/dashboard', 'HomeController@index')->middleware('auth');
+//store message from contact us page
 Route::post('/contact', 'ContactController@store');
-Route::get('/message', 'ContactController@index')->middleware('auth');
-Route::post('/message/{id}', 'ContactController@destroy')->middleware('auth');
 
+//display the lists of the blog posts
 Route::get('/blog', 'PostController@posts');
+
+//display a particular post along with comment section
 Route::get('/blog/{slug}', 'PostController@show');
 
-
+//following routes can be accessed by only authenticated users
 Route::group(['middleware' => ['auth']], function()
 {
 	// show new post form
@@ -51,5 +54,13 @@ Route::group(['middleware' => ['auth']], function()
 	// display user's all posts
 	Route::get('all-posts','PostController@index');
 
-	
+	//landing page after login
+	Route::get('/dashboard', 'HomeController@index');
+
+	// viewing the messages from contact us page
+	Route::get('/message', 'ContactController@index');
+
+	//deleting the messaage from contact us page
+	Route::post('/message/{id}', 'ContactController@destroy');
+
 });

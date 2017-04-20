@@ -62,8 +62,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="/dashboard">Dashboard</a></li> 
                         <li> <a href="/message">Message</a></li> 
-                        <li><a href="/all-posts">All Posts</a></li> 
-                        <li><a href="/new-post">New Post</a></li> 
+                        <li><a href="/all-posts">Blog</a></li>  
                     </ul>
 
                     <!-- Right Side Of Navbar -->
