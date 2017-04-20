@@ -1,2 +1,3 @@
-/config/database.php
-.env
+/vendor/*
+vendor/*
+vendor/*

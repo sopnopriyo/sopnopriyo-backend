@@ -21,16 +21,19 @@ class ReflectionHelper
         $propsArr = array();
 
         foreach ($props as $prop) {
-            $f = $prop->getName();
-            $propsArr[$f] = $prop;
+            $propertyName = $prop->getName();
+            $propsArr[$propertyName] = $prop;
         }
 
         if ($parentClass = $ref->getParentClass()) {
             $parentPropsArr = self::getProperties($parentClass);
-            foreach ($parentPropsArr as $property) {
-                $propsArr[] = $property;
+            foreach ($propsArr as $key => $property) {
+                $parentPropsArr[$key] = $property;
             }
+
+            return $parentPropsArr;
         }
+
         return $propsArr;
     }
 }

@@ -40,6 +40,46 @@ nav a:hover,
 nav a:focus {
 	outline: none;
 }
+
+.navbar-frontend {
+  background-color: #d0cde3;
+  border-color: #e7e7e7;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #d0cde3;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    color: black;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+
 /* Effect 1: Brackets */
 .cl-effect-1 a::before,
 .cl-effect-1 a::after {
@@ -84,6 +124,7 @@ nav a:focus {
 	background-size: cover;
 	min-height:800px;
 	position:relative;
+  margin-top: -20px;
 }
 .header-top {
   padding: 2em 0em;

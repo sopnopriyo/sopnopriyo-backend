@@ -2,6 +2,7 @@
 
 namespace Illuminate\Cache;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Cache\Repository as Cache;
 
 class RateLimiter
@@ -38,8 +39,8 @@ class RateLimiter
             return true;
         }
 
-        if ($this->attempts($key) > $maxAttempts) {
-            $this->cache->add($key.':lockout', time() + ($decayMinutes * 60), $decayMinutes);
+        if ($this->attempts($key) >= $maxAttempts) {
+            $this->lockout($key, $decayMinutes);
 
             $this->resetAttempts($key);
 
@@ -47,6 +48,20 @@ class RateLimiter
         }
 
         return false;
+    }
+
+    /**
+     * Add the lockout key to the cache.
+     *
+     * @param  string  $key
+     * @param  int  $decayMinutes
+     * @return void
+     */
+    protected function lockout($key, $decayMinutes)
+    {
+        $this->cache->add(
+            $key.':lockout', Carbon::now()->getTimestamp() + ($decayMinutes * 60), $decayMinutes
+        );
     }
 
     /**
@@ -58,7 +73,7 @@ class RateLimiter
      */
     public function hit($key, $decayMinutes = 1)
     {
-        $this->cache->add($key, 1, $decayMinutes);
+        $this->cache->add($key, 0, $decayMinutes);
 
         return (int) $this->cache->increment($key);
     }
@@ -96,7 +111,7 @@ class RateLimiter
     {
         $attempts = $this->attempts($key);
 
-        return $attempts === 0 ? $maxAttempts : $maxAttempts - $attempts + 1;
+        return $maxAttempts - $attempts;
     }
 
     /**
@@ -120,6 +135,6 @@ class RateLimiter
      */
     public function availableIn($key)
     {
-        return $this->cache->get($key.':lockout') - time();
+        return $this->cache->get($key.':lockout') - Carbon::now()->getTimestamp();
     }
 }

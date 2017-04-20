@@ -1,21 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.back-end')
 
 @section('content')
-<div class="container-fluid">
-  <div class="row content">
-    <div class="col-sm-3 sidenav">
-      <ul class="nav nav-pills nav-stacked">
-        <li ><a href="/dashboard">Dashboard</a></li>
-        <li class="active"><a href="/message">Message</a></li>
-     </ul><br>
-      
-    </div>
-
-    <div class="col-sm-9">
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 col-md-offset-1">
       <h4><small>Recent Messages</small></h4>
       <hr>
       
-       <div class="flash-message">
+            <div class="flash-message">
               @foreach (['danger', 'warning', 'success', 'info'] as $msg)
                 @if(Session::has('alert-' . $msg))
 
@@ -39,7 +31,7 @@
         <td>{{ $message->name }}</td>
         <td>{{ $message->email }}</td>
         <td>{{ $message->message }}</td>
-        <td>{{ $message->created_at }}</td>
+        <td>{{ date('d-m-Y', strtotime($message->created_at)) }}</td>
         <td>
             {!! Form::open(['url' => 'message/'.$message->id,'autocomplete' => 'off']) !!}
             

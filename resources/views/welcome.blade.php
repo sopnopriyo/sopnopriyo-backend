@@ -1,113 +1,11 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-    <title>{{ config('app.name', 'Laravel') }}</title>
-<link rel="icon" 
-      type="image/png" 
-      href="{{ URL::asset('images/logo.png') }}" />
-<link rel="stylesheet" href="{{ URL::asset('css/bootstrap.css') }}">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.front-end')
 
-<!-- Custom Theme files -->
-<link rel="stylesheet" href="{{ URL::asset('css/style.css') }}">
-<!-- Custom Theme files -->
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }>
-</script>
-<script>
-        window.Laravel = <?php echo json_encode([
-            'csrfToken' => csrf_token(),
-        ]); ?>
-</script>
-<meta name="keywords" content="Sopnorpiyo, Shahin Alam, Md Shahin Alam" />
-<!--Google Fonts-->
-<!-- start-smoth-scrolling -->
-<script type="text/javascript" src="js/move-top.js"></script>
-<script type="text/javascript" src="js/easing.js"></script>
-    <script type="text/javascript">
-            jQuery(document).ready(function($) {
-                $(".scroll").click(function(event){     
-                    event.preventDefault();
-                    $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
-                });
-            });
-</script>
-<!-- //end-smoth-scrolling -->  
-<!---pop-up-box---->
-                    <link href="css/popuo-box.css" rel="stylesheet" type="text/css" media="all"/>
-                    <script src="js/jquery.magnific-popup.js" type="text/javascript"></script>
-                    <!---//pop-up-box---->
-                     <script>
-                        $(document).ready(function() {
-                        $('.popup-with-zoom-anim').magnificPopup({
-                            type: 'inline',
-                            fixedContentPos: false,
-                            fixedBgPos: true,
-                            overflowY: 'auto',
-                            closeBtnInside: true,
-                            preloader: false,
-                            midClick: true,
-                            removalDelay: 300,
-                            mainClass: 'my-mfp-zoom-in'
-                        });
-                                                                                        
-                        });
-                </script>
-</head>
-<body>
-<!--header start here-->
+@section('content')
+
 <div class="header">
    <div class="container">
         <div class="header-top">    
-            <div class="search">        
-                          <a class="play-icon popup-with-zoom-anim" href="#small-dialog"><i> </i></a>
-                    </div>
-                     <div id="small-dialog" class="mfp-hide">
-                        <div class="search-top">
-                            <div class="login">
-                                <input type="submit" value="">
-                                <input type="text" value="Search Here..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '';}">     
-                            </div>
-                            
-                        </div>              
-                    </div>
-             <div class="top-navg">
-                       <span class="menu"> <img src="images/icon.png" alt=""/></span>
-                <nav class="cl-effect-1">   
-                    <ul class="res">
-                        <li><a class="scroll active" href="#home">Home</a></li> 
-                        <li><a class="scroll" href="#about">About</a></li> 
-                        <li><a class="scroll" href="#contact">Contact</a></li> 
-                         @if (Auth::guest())
-                          <li><a href="{{ url('/login') }}">Login</a></li>
-                        @else
-                          <li>
-                                    <a href="{{ url('/logout') }}"
-                                        onclick="event.preventDefault();
-                                                 document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-
-                                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-                            </li>
-                          @endif
-                     </ul>
-                 </nav>
-
-                    <!-- script-for-menu -->
-                         <script>
-                           $( "span.menu" ).click(function() {
-                             $( "ul.res" ).slideToggle( 300, function() {
-                             // Animation complete.
-                              });
-                             });
-                        </script>
-                <!-- /script-for-menu -->
-           </div>
+          
                         
                 <div class="clearfix"> </div>
               </div>
@@ -124,7 +22,7 @@
                 <div class="weare-main">
                     <h2>Who I Am</h2>
                     <img src="images/circles.png" alt="">
-                    <p>I born in Bangladesh, and currently studying and working in Malaysia. Pursuing a bachelor degree in Computer Science majoring in Software Engineering in University of Malaya, Malaysia.Apart from that I am also working as a Cloud Application Developer in Hilti.</p>
+                    <p>I born in a very small distirct called Meherpur in Bangladesh, and currently studying in Malaysia. Pursuing a bachelor degree in Computer Science majoring in Software Engineering in University of Malaya, Malaysia.</p>
                 </div>
                 <div class="weare-bottom">
                     <div class="col-md-6 weare-left">
@@ -230,29 +128,17 @@
     <div class="container">
         <div class="copy-right-main">
             <ul>
-                <li><a href="https://www.facebook.com/sopnopriyoo"><span class="fa"> </span></a></li>
-                <li><a href="https://twitter.com/sopnopriyo"><span class="tw"> </span></a></li>
-                <li><a href="https://github.com/sopnopriyo"><span class="g"> </span></a></li>
-                <li><a href="https://my.linkedin.com/in/shahin-alam-98933194"><span class="in"> </span></a></li>
+                <li><a href="https://www.facebook.com/sopnopriyoo"><i class="fa fa-facebook" style="font-size:34px;color:#3b5998"></i></a></li>
+                <li><a href="https://twitter.com/sopnopriyo"><i class="fa fa-twitter" style="font-size:34px;color:#00aced"></i></a></li>
+                <li><a href="https://github.com/sopnopriyo"><i class="fa fa-github" style="font-size:34px;color:black"></i></a></li>
+                <li><a href="https://my.linkedin.com/in/shahin-alam-98933194"><i class="fa fa-linkedin" style="font-size:34px;color:#0077B5"></i></a></li>
+                <li><a href="https://stackoverflow.com/users/4778904/shahin-alam"><i class="fa fa-stack-overflow" style="font-size:34px;color:#fff"></i></a></li>
+
                 
             </ul>
             <div class="clearfix"> </div>
         </div>
-        <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            /*
-                                            var defaults = {
-                                                containerID: 'toTop', // fading element id
-                                                containerHoverID: 'toTopHover', // fading element hover id
-                                                scrollSpeed: 1200,
-                                                easingType: 'linear' 
-                                            };
-                                            */
-                                            
-                                            $().UItoTop({ easingType: 'easeOutQuart' });
-                                            
-                                        });
-                                    </script>
+    
                         <a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 
     </div>
@@ -261,10 +147,7 @@
 
 <br><br> <br>
 <center>
- <p>© 2016 , Developed by Shahin </a></p>
+ <p> 2017 , Developed by Shahin </a></p>
 </center> 
 
-<!--copyright end here-->
-      
-</body>
-</html>     
+@endsection

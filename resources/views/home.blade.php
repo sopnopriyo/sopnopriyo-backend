@@ -1,27 +1,17 @@
-@extends('layouts.app')
+@extends('layouts.back-end')
 
 @section('content')
-<div class="container-fluid">
-  <div class="row content">
-    <div class="col-sm-3 sidenav">
-      <ul class="nav nav-pills nav-stacked">
-        <li class="active"><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/message">Message</a></li>
-      </ul><br>
-      
-    </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dashboard</div>
 
-    <div class="col-sm-9">
-      <h4><small>Dashboard</small></h4>
-      <hr>
-      <h2>Total number of messages : <mark>{{$contacts}}</mark></h2>
-      
-      
-
+                <div class="panel-body">
+                    You are logged in!
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
-
 @endsection
-

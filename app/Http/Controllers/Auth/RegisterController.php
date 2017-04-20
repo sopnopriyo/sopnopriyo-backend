@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
@@ -23,11 +23,11 @@ class RegisterController extends Controller
     use RegistersUsers;
 
     /**
-     * Where to redirect users after login / registration.
+     * Where to redirect users after registration.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -68,10 +68,22 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+     /**
+     * Request for show login page is disbaled 
+     *
+     * @return login page
+     */
+
     public function showRegistrationForm()
     {
         return redirect('login');
     }
+
+    /**
+     * Request for registering user is disbaled 
+     *
+     * @return login page
+     */
 
     public function register()
     {

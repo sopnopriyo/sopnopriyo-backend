@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\HttpKernel\Tests\DataCollector;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\DataCollector\DumpDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class DumpDataCollectorTest extends \PHPUnit_Framework_TestCase
+class DumpDataCollectorTest extends TestCase
 {
     public function testDump()
     {
@@ -82,10 +83,9 @@ class DumpDataCollectorTest extends \PHPUnit_Framework_TestCase
         $line = __LINE__ - 1;
         $file = __FILE__;
         $xOutput = <<<EOTXT
- <pre class=sf-dump id=sf-dump data-indent-pad="  "><a href="test://{$file}:{$line}" title="{$file}"><span class=sf-dump-meta>DumpDataCollectorTest.php</span></a> on line <span class=sf-dump-meta>{$line}</span>:
+<pre class=sf-dump id=sf-dump data-indent-pad="  "><a href="test://{$file}:{$line}" title="{$file}"><span class=sf-dump-meta>DumpDataCollectorTest.php</span></a> on line <span class=sf-dump-meta>{$line}</span>:
 <span class=sf-dump-num>123</span>
 </pre>
-
 EOTXT;
 
         ob_start();
@@ -96,7 +96,7 @@ EOTXT;
         $output = preg_replace('#<(script|style).*?</\1>#s', '', $output);
         $output = preg_replace('/sf-dump-\d+/', 'sf-dump', $output);
 
-        $this->assertSame($xOutput, $output);
+        $this->assertSame($xOutput, trim($output));
         $this->assertSame(1, $collector->getDumpsCount());
         $collector->serialize();
     }
