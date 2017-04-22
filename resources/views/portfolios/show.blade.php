@@ -14,10 +14,6 @@
 
 <div class="container">
 
-  <div class="page-header">
-    <h3>{!! $post->title !!}</h3>      
-  </div>
-
 	@if($post)
 		<div>
 			{!! $post->body !!}

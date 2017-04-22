@@ -33,6 +33,9 @@ Route::get('/blog', 'PostController@posts');
 //display a particular post along with comment section
 Route::get('/blog/{slug}', 'PostController@show');
 
+//display the lists of portfilios
+Route::get('/portfolio', 'PortfolioController@frontEndPortfolio');
+
 //following routes can be accessed by only authenticated users
 Route::group(['middleware' => ['auth']], function()
 {
@@ -62,5 +65,24 @@ Route::group(['middleware' => ['auth']], function()
 
 	//deleting the messaage from contact us page
 	Route::post('/message/{id}', 'ContactController@destroy');
+
+	//list all the resources of portfolio in backend
+	Route::get('all-portfolios', 'PortfolioController@index');
+
+	//display a page for creating portfolio in backend
+	Route::get('new-portfolio', 'PortfolioController@create');
+
+	//Store portfolio data into database
+	Route::post('new-portfolio', 'PortfolioController@store');
+
+	// edit portfolio form
+	Route::get('portfolio/edit/{id}',['as' => 'portfolio.edit', 'uses' => 'PortfolioController@edit']);
+
+	// update portfolio
+	Route::post('portfolio/update','PortfolioController@update');
+
+	//deleting a portfolio
+	Route::get('/portfolio/delete/{id}', 'PortfolioController@destroy');
+
 
 });

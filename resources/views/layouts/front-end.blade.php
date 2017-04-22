@@ -51,7 +51,7 @@
                         <li><a class="scroll" href="/#about">About</a></li> 
                         <li><a class="scroll" href="/#contact">Contact</a></li>
                         <li><a class="scroll" href="/blog">Blog</a></li>
-                         
+                        <li><a class="scroll" href="/portfolio">Portfolio</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
