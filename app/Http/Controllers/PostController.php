@@ -27,7 +27,7 @@ class PostController extends Controller {
 	 */
 	public function posts()
 	{
-		$posts = Posts::orderBy('created_at','desc')->paginate(5);
+		$posts = Posts::orderBy('created_at','desc')->paginate(3);
 		$title = 'Latest Posts';
 		return view('posts.frontEndBlog')->withPosts($posts)->withTitle($title);
 	}
