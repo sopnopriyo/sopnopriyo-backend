@@ -51,6 +51,7 @@
           @endforeach
         </tbody>
       </table>
+      {!! $posts->render() !!}
     </div>
   </div>
 
