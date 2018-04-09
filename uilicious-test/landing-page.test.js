@@ -1,3 +1,3 @@
-I.goTo("http://wwww.sopnopriyo.com");
+I.goTo("http://sopnopriyo.com/");
 I.click("Blog");
 I.see("Gitbook");
