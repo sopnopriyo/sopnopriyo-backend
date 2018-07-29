@@ -5,6 +5,7 @@ import com.sopnopriyo.application.SopnopriyoApp;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.repository.UserRepository;
+import com.sopnopriyo.application.service.UserService;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -68,6 +69,9 @@ public class PostResourceIntTest {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private UserService userService;
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -87,7 +91,7 @@ public class PostResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PostResource postResource = new PostResource(postRepository);
+        final PostResource postResource = new PostResource(postRepository, userService);
         this.restPostMockMvc = MockMvcBuilders.standaloneSetup(postResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
