@@ -4,6 +4,7 @@ import com.sopnopriyo.application.SopnopriyoApp;
 
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.repository.PostRepository;
+import com.sopnopriyo.application.repository.UserRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -63,6 +65,8 @@ public class PostResourceIntTest {
     @Autowired
     private PostRepository postRepository;
 
+	@Autowired
+	private UserRepository userRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -97,14 +101,15 @@ public class PostResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Post createEntity(EntityManager em) {
+    public Post createEntity(EntityManager em) {
         Post post = new Post()
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
             .status(DEFAULT_STATUS)
             .coverImage(DEFAULT_COVER_IMAGE)
             .coverImageContentType(DEFAULT_COVER_IMAGE_CONTENT_TYPE)
-            .date(DEFAULT_DATE);
+			.date(DEFAULT_DATE)
+			.user(userRepository.findOneByLogin("user").get());
         return post;
     }
 
@@ -192,7 +197,8 @@ public class PostResourceIntTest {
     }
 
     @Test
-    @Transactional
+	@Transactional
+	@WithMockUser
     public void getAllPosts() throws Exception {
         // Initialize the database
         postRepository.saveAndFlush(post);

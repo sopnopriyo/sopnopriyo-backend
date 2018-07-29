@@ -35,7 +35,7 @@
     "changelogDate": "20180729031619",
     "entityTableName": "contact",
     "dto": "no",
-    "pagination": "no",
+    "pagination": "pagination",
     "service": "no",
     "jpaMetamodelFiltering": false,
     "fluentMethods": true,

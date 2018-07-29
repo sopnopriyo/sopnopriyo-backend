@@ -92,7 +92,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page = postRepository.findAll(pageable);
+        Page<Post> page = postRepository.findByUserIsCurrentUser(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

@@ -5,9 +5,14 @@ import com.sopnopriyo.application.domain.Portfolio;
 import com.sopnopriyo.application.repository.PortfolioRepository;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
+import com.sopnopriyo.application.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,13 +85,16 @@ public class PortfolioResource {
     /**
      * GET  /portfolios : get all the portfolios.
      *
+     * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of portfolios in body
      */
     @GetMapping("/portfolios")
     @Timed
-    public List<Portfolio> getAllPortfolios() {
-        log.debug("REST request to get all Portfolios");
-        return portfolioRepository.findAll();
+    public ResponseEntity<List<Portfolio>> getAllPortfolios(Pageable pageable) {
+        log.debug("REST request to get a page of Portfolios");
+        Page<Portfolio> page = portfolioRepository.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/portfolios");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**

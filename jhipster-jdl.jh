@@ -29,4 +29,5 @@ entity Contact {
 relationship ManyToOne {
   Post{user} to User
 }
-paginate Post with pagination
+
+paginate Contact, Portfolio with pagination
