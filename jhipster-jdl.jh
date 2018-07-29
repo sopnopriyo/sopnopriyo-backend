@@ -1,0 +1,32 @@
+enum Status {
+    DRAFT, PUBLISHED
+}
+
+entity Post {
+	title String required maxlength(255),
+    body TextBlob required,
+    status Status,
+    coverImage ImageBlob required,
+    date Instant required
+}
+
+entity Portfolio {
+	title String required maxlength(255),
+    url String required,
+    image Boolean,
+    description TextBlob,
+    date Instant required
+}
+
+entity Contact {
+	name String required,
+    email String required,
+    message TextBlob required,
+    date Instant required
+}
+
+
+relationship ManyToOne {
+  Post{user} to User
+}
+paginate Post with pagination
