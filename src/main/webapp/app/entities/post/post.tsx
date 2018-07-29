@@ -28,7 +28,8 @@ export type IPostState = IPaginationBaseState;
 
 export class Post extends React.Component<IPostProps, IPostState> {
   state: IPostState = {
-    ...getSortState(this.props.location, ITEMS_PER_PAGE)
+    ...getSortState(this.props.location, ITEMS_PER_PAGE),
+    activePage: 0
   };
 
   componentDidMount() {

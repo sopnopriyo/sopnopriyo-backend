@@ -22,6 +22,7 @@ const initialState = {
   entities: [] as ReadonlyArray<IContact>,
   entity: defaultValue,
   updating: false,
+  totalItems: 0,
   updateSuccess: false
 };
 
@@ -64,6 +65,7 @@ export default (state: ContactState = initialState, action): ContactState => {
       return {
         ...state,
         loading: false,
+        totalItems: action.payload.headers['x-total-count'],
         entities: action.payload.data
       };
     case SUCCESS(ACTION_TYPES.FETCH_CONTACT):
@@ -110,10 +112,13 @@ const apiUrl = 'api/contacts';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IContact> = (page, size, sort) => ({
-  type: ACTION_TYPES.FETCH_CONTACT_LIST,
-  payload: axios.get<IContact>(`${apiUrl}?cacheBuster=${new Date().getTime()}`)
-});
+export const getEntities: ICrudGetAllAction<IContact> = (page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_CONTACT_LIST,
+    payload: axios.get<IContact>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
+  };
+};
 
 export const getEntity: ICrudGetAction<IContact> = id => {
   const requestUrl = `${apiUrl}/${id}`;

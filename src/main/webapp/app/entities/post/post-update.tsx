@@ -38,8 +38,6 @@ export class PostUpdate extends React.Component<IPostUpdateProps, IPostUpdateSta
     } else {
       this.props.getEntity(this.props.match.params.id);
     }
-
-    this.props.getUsers();
   }
 
   onBlobChange = (isAnImage, name) => event => {
@@ -79,19 +77,11 @@ export class PostUpdate extends React.Component<IPostUpdateProps, IPostUpdateSta
       this.setState({
         userId: -1
       });
-    } else {
-      for (const i in this.props.users) {
-        if (id === this.props.users[i].id.toString()) {
-          this.setState({
-            userId: this.props.users[i].id
-          });
-        }
-      }
     }
   };
 
   render() {
-    const { postEntity, users, loading, updating } = this.props;
+    const { postEntity, loading, updating } = this.props;
     const { isNew } = this.state;
 
     const { body, coverImage, coverImageContentType } = postEntity;
@@ -207,19 +197,6 @@ export class PostUpdate extends React.Component<IPostUpdateProps, IPostUpdateSta
                     }}
                   />
                 </AvGroup>
-                <AvGroup>
-                  <Label for="user.id">User</Label>
-                  <AvInput id="post-user" type="select" className="form-control" name="user.id" onChange={this.userUpdate}>
-                    <option value="" key="0" />
-                    {users
-                      ? users.map(otherEntity => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.id}
-                          </option>
-                        ))
-                      : null}
-                  </AvInput>
-                </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/post" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />&nbsp;
                   <span className="d-none d-md-inline">Back</span>
@@ -238,14 +215,12 @@ export class PostUpdate extends React.Component<IPostUpdateProps, IPostUpdateSta
 }
 
 const mapStateToProps = (storeState: IRootState) => ({
-  users: storeState.userManagement.users,
   postEntity: storeState.post.entity,
   loading: storeState.post.loading,
   updating: storeState.post.updating
 });
 
 const mapDispatchToProps = {
-  getUsers,
   getEntity,
   updateEntity,
   setBlob,

@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { byteSize, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import {
+  byteSize,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -11,16 +19,46 @@ import { getEntities } from './contact.reducer';
 import { IContact } from 'app/shared/model/contact.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IContactProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export class Contact extends React.Component<IContactProps> {
+export type IContactState = IPaginationBaseState;
+
+export class Contact extends React.Component<IContactProps, IContactState> {
+  state: IContactState = {
+    ...getSortState(this.props.location, ITEMS_PER_PAGE)
+  };
+
   componentDidMount() {
-    this.props.getEntities();
+    this.getEntities();
   }
 
+  sort = prop => () => {
+    this.setState(
+      {
+        activePage: 0,
+        order: this.state.order === 'asc' ? 'desc' : 'asc',
+        sort: prop
+      },
+      () => this.sortEntities()
+    );
+  };
+
+  sortEntities() {
+    this.getEntities();
+    this.props.history.push(`${this.props.location.pathname}?page=${this.state.activePage}&sort=${this.state.sort},${this.state.order}`);
+  }
+
+  handlePagination = activePage => this.setState({ activePage }, () => this.sortEntities());
+
+  getEntities = () => {
+    const { activePage, itemsPerPage, sort, order } = this.state;
+    this.props.getEntities(activePage, itemsPerPage, `${sort},${order}`);
+  };
+
   render() {
-    const { contactList, match } = this.props;
+    const { contactList, match, totalItems } = this.props;
     return (
       <div>
         <h2 id="contact-heading">
@@ -33,11 +71,21 @@ export class Contact extends React.Component<IContactProps> {
           <Table responsive>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Message</th>
-                <th>Date</th>
+                <th className="hand" onClick={this.sort('id')}>
+                  ID <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('name')}>
+                  Name <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('email')}>
+                  Email <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('message')}>
+                  Message <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('date')}>
+                  Date <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -73,13 +121,22 @@ export class Contact extends React.Component<IContactProps> {
             </tbody>
           </Table>
         </div>
+        <Row className="justify-content-center">
+          <JhiPagination
+            items={getPaginationItemsNumber(totalItems, this.state.itemsPerPage)}
+            activePage={this.state.activePage}
+            onSelect={this.handlePagination}
+            maxButtons={5}
+          />
+        </Row>
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ contact }: IRootState) => ({
-  contactList: contact.entities
+  contactList: contact.entities,
+  totalItems: contact.totalItems
 });
 
 const mapDispatchToProps = {

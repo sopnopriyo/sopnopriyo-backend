@@ -3,7 +3,15 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { byteSize, ICrudGetAllAction, TextFormat } from 'react-jhipster';
+import {
+  byteSize,
+  ICrudGetAllAction,
+  TextFormat,
+  getSortState,
+  IPaginationBaseState,
+  getPaginationItemsNumber,
+  JhiPagination
+} from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -11,16 +19,46 @@ import { getEntities } from './portfolio.reducer';
 import { IPortfolio } from 'app/shared/model/portfolio.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
 
 export interface IPortfolioProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
-export class Portfolio extends React.Component<IPortfolioProps> {
+export type IPortfolioState = IPaginationBaseState;
+
+export class Portfolio extends React.Component<IPortfolioProps, IPortfolioState> {
+  state: IPortfolioState = {
+    ...getSortState(this.props.location, ITEMS_PER_PAGE)
+  };
+
   componentDidMount() {
-    this.props.getEntities();
+    this.getEntities();
   }
 
+  sort = prop => () => {
+    this.setState(
+      {
+        activePage: 0,
+        order: this.state.order === 'asc' ? 'desc' : 'asc',
+        sort: prop
+      },
+      () => this.sortEntities()
+    );
+  };
+
+  sortEntities() {
+    this.getEntities();
+    this.props.history.push(`${this.props.location.pathname}?page=${this.state.activePage}&sort=${this.state.sort},${this.state.order}`);
+  }
+
+  handlePagination = activePage => this.setState({ activePage }, () => this.sortEntities());
+
+  getEntities = () => {
+    const { activePage, itemsPerPage, sort, order } = this.state;
+    this.props.getEntities(activePage, itemsPerPage, `${sort},${order}`);
+  };
+
   render() {
-    const { portfolioList, match } = this.props;
+    const { portfolioList, match, totalItems } = this.props;
     return (
       <div>
         <h2 id="portfolio-heading">
@@ -33,12 +71,24 @@ export class Portfolio extends React.Component<IPortfolioProps> {
           <Table responsive>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Url</th>
-                <th>Image</th>
-                <th>Description</th>
-                <th>Date</th>
+                <th className="hand" onClick={this.sort('id')}>
+                  ID <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('title')}>
+                  Title <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('url')}>
+                  Url <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('image')}>
+                  Image <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('description')}>
+                  Description <FontAwesomeIcon icon="sort" />
+                </th>
+                <th className="hand" onClick={this.sort('date')}>
+                  Date <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -75,13 +125,22 @@ export class Portfolio extends React.Component<IPortfolioProps> {
             </tbody>
           </Table>
         </div>
+        <Row className="justify-content-center">
+          <JhiPagination
+            items={getPaginationItemsNumber(totalItems, this.state.itemsPerPage)}
+            activePage={this.state.activePage}
+            onSelect={this.handlePagination}
+            maxButtons={5}
+          />
+        </Row>
       </div>
     );
   }
 }
 
 const mapStateToProps = ({ portfolio }: IRootState) => ({
-  portfolioList: portfolio.entities
+  portfolioList: portfolio.entities,
+  totalItems: portfolio.totalItems
 });
 
 const mapDispatchToProps = {

@@ -22,6 +22,7 @@ const initialState = {
   entities: [] as ReadonlyArray<IPortfolio>,
   entity: defaultValue,
   updating: false,
+  totalItems: 0,
   updateSuccess: false
 };
 
@@ -64,6 +65,7 @@ export default (state: PortfolioState = initialState, action): PortfolioState =>
       return {
         ...state,
         loading: false,
+        totalItems: action.payload.headers['x-total-count'],
         entities: action.payload.data
       };
     case SUCCESS(ACTION_TYPES.FETCH_PORTFOLIO):
@@ -110,10 +112,13 @@ const apiUrl = 'api/portfolios';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IPortfolio> = (page, size, sort) => ({
-  type: ACTION_TYPES.FETCH_PORTFOLIO_LIST,
-  payload: axios.get<IPortfolio>(`${apiUrl}?cacheBuster=${new Date().getTime()}`)
-});
+export const getEntities: ICrudGetAllAction<IPortfolio> = (page, size, sort) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
+  return {
+    type: ACTION_TYPES.FETCH_PORTFOLIO_LIST,
+    payload: axios.get<IPortfolio>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
+  };
+};
 
 export const getEntity: ICrudGetAction<IPortfolio> = id => {
   const requestUrl = `${apiUrl}/${id}`;
