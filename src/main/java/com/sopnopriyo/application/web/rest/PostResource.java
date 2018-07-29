@@ -2,7 +2,9 @@ package com.sopnopriyo.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
+import com.sopnopriyo.application.domain.User;
 import com.sopnopriyo.application.repository.PostRepository;
+import com.sopnopriyo.application.service.UserService;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
@@ -34,10 +36,12 @@ public class PostResource {
 
     private static final String ENTITY_NAME = "post";
 
-    private final PostRepository postRepository;
+	private final PostRepository postRepository;
+	private final UserService userService;
 
-    public PostResource(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public PostResource(PostRepository postRepository, UserService userService) {
+		this.postRepository = postRepository;
+		this.userService = userService;
     }
 
     /**
@@ -48,12 +52,14 @@ public class PostResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/posts")
-    @Timed
+	@Timed
     public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) throws URISyntaxException {
         log.debug("REST request to save Post : {}", post);
         if (post.getId() != null) {
             throw new BadRequestAlertException("A new post cannot already have an ID", ENTITY_NAME, "idexists");
-        }
+		}
+		final User user = userService.getUserWithAuthorities().get();
+		post.setUser(user);
         Post result = postRepository.save(post);
         return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
