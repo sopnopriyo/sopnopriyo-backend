@@ -5,21 +5,6 @@
 /src/test/javascript/coverage/
 
 ######################
-# Node
-######################
-/node/
-node_tmp/
-node_modules/
-npm-debug.log.*
-/.awcache/*
-/.cache-loader/*
-
-######################
-# SASS
-######################
-.sass-cache/
-
-######################
 # Eclipse
 ######################
 *.pydevproject
@@ -137,8 +122,3 @@ Desktop.ini
 # Maven Wrapper
 ######################
 !.mvn/wrapper/maven-wrapper.jar
-
-######################
-# ESLint
-######################
-.eslintcache

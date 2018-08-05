@@ -105,6 +105,7 @@ public class PostResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
+	@WithMockUser
     public Post createEntity(EntityManager em) {
         Post post = new Post()
             .title(DEFAULT_TITLE)
@@ -123,7 +124,8 @@ public class PostResourceIntTest {
     }
 
     @Test
-    @Transactional
+	@Transactional
+	@WithMockUser
     public void createPost() throws Exception {
         int databaseSizeBeforeCreate = postRepository.findAll().size();
 
@@ -146,7 +148,8 @@ public class PostResourceIntTest {
     }
 
     @Test
-    @Transactional
+	@Transactional
+	@WithMockUser
     public void createPostWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = postRepository.findAll().size();
 
