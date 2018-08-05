@@ -1,9 +1,9 @@
 # sopnopriyo
-This application was generated using JHipster 5.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.1.0](https://www.jhipster.tech/documentation-archive/v5.1.0).
+This is the backend of my personal website. Developed using Java, Spring Boot, MySql and Hibernate
 
 ## Development
 
-To start your application in the dev profile, simply run:
+To start the application in the dev profile, simply run:
 
     ./mvnw
 
@@ -27,7 +27,7 @@ Refer to [Using JHipster in production][] for more details.
 
 ## Testing
 
-To launch your application's tests, run:
+To launch the application's tests, run:
 
     ./mvnw clean test
 
