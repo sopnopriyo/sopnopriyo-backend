@@ -20,7 +20,7 @@ before_install:
 script:
   - chmod +x mvnw
   - ./mvnw clean test
-  - ./mvnw com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.appName=
+  - ./mvnw com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.appName=sopnopriyo
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
