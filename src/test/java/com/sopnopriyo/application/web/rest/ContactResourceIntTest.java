@@ -3,7 +3,7 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.SopnopriyoApp;
 
 import com.sopnopriyo.application.domain.Contact;
-import com.sopnopriyo.application.repository.ContactRepository;
+import com.sopnopriyo.application.service.ContactService;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -55,7 +54,7 @@ public class ContactResourceIntTest {
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
-    private ContactRepository contactRepository;
+    private ContactService contactService;
 
 
     @Autowired
@@ -77,7 +76,7 @@ public class ContactResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final ContactResource contactResource = new ContactResource(contactRepository);
+        final ContactResource contactResource = new ContactResource(contactService);
         this.restContactMockMvc = MockMvcBuilders.standaloneSetup(contactResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -108,7 +107,7 @@ public class ContactResourceIntTest {
     @Test
     @Transactional
     public void createContact() throws Exception {
-        int databaseSizeBeforeCreate = contactRepository.findAll().size();
+        int databaseSizeBeforeCreate = contactService.findAll().size();
 
         // Create the Contact
         restContactMockMvc.perform(post("/api/contacts")
@@ -117,7 +116,7 @@ public class ContactResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Contact in the database
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeCreate + 1);
         Contact testContact = contactList.get(contactList.size() - 1);
         assertThat(testContact.getName()).isEqualTo(DEFAULT_NAME);
@@ -129,7 +128,7 @@ public class ContactResourceIntTest {
     @Test
     @Transactional
     public void createContactWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = contactRepository.findAll().size();
+        int databaseSizeBeforeCreate = contactService.findAll().size();
 
         // Create the Contact with an existing ID
         contact.setId(1L);
@@ -141,14 +140,14 @@ public class ContactResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Contact in the database
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkNameIsRequired() throws Exception {
-        int databaseSizeBeforeTest = contactRepository.findAll().size();
+        int databaseSizeBeforeTest = contactService.findAll().size();
         // set the field null
         contact.setName(null);
 
@@ -159,14 +158,14 @@ public class ContactResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(contact)))
             .andExpect(status().isBadRequest());
 
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkEmailIsRequired() throws Exception {
-        int databaseSizeBeforeTest = contactRepository.findAll().size();
+        int databaseSizeBeforeTest = contactService.findAll().size();
         // set the field null
         contact.setEmail(null);
 
@@ -177,14 +176,14 @@ public class ContactResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(contact)))
             .andExpect(status().isBadRequest());
 
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = contactRepository.findAll().size();
+        int databaseSizeBeforeTest = contactService.findAll().size();
         // set the field null
         contact.setDate(null);
 
@@ -195,7 +194,7 @@ public class ContactResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(contact)))
             .andExpect(status().isBadRequest());
 
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeTest);
     }
 
@@ -203,7 +202,7 @@ public class ContactResourceIntTest {
     @Transactional
     public void getAllContacts() throws Exception {
         // Initialize the database
-        contactRepository.saveAndFlush(contact);
+        contactService.saveAndFlush(contact);
 
         // Get all the contactList
         restContactMockMvc.perform(get("/api/contacts?sort=id,desc"))
@@ -215,13 +214,13 @@ public class ContactResourceIntTest {
             .andExpect(jsonPath("$.[*].message").value(hasItem(DEFAULT_MESSAGE.toString())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-    
+
 
     @Test
     @Transactional
     public void getContact() throws Exception {
         // Initialize the database
-        contactRepository.saveAndFlush(contact);
+        contactService.saveAndFlush(contact);
 
         // Get the contact
         restContactMockMvc.perform(get("/api/contacts/{id}", contact.getId()))
@@ -245,12 +244,12 @@ public class ContactResourceIntTest {
     @Transactional
     public void updateContact() throws Exception {
         // Initialize the database
-        contactRepository.saveAndFlush(contact);
+        contactService.saveAndFlush(contact);
 
-        int databaseSizeBeforeUpdate = contactRepository.findAll().size();
+        int databaseSizeBeforeUpdate = contactService.findAll().size();
 
         // Update the contact
-        Contact updatedContact = contactRepository.findById(contact.getId()).get();
+        Contact updatedContact = contactService.findById(contact.getId()).get();
         // Disconnect from session so that the updates on updatedContact are not directly saved in db
         em.detach(updatedContact);
         updatedContact
@@ -265,7 +264,7 @@ public class ContactResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Contact in the database
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeUpdate);
         Contact testContact = contactList.get(contactList.size() - 1);
         assertThat(testContact.getName()).isEqualTo(UPDATED_NAME);
@@ -277,7 +276,7 @@ public class ContactResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingContact() throws Exception {
-        int databaseSizeBeforeUpdate = contactRepository.findAll().size();
+        int databaseSizeBeforeUpdate = contactService.findAll().size();
 
         // Create the Contact
 
@@ -288,7 +287,7 @@ public class ContactResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Contact in the database
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeUpdate);
     }
 
@@ -296,9 +295,9 @@ public class ContactResourceIntTest {
     @Transactional
     public void deleteContact() throws Exception {
         // Initialize the database
-        contactRepository.saveAndFlush(contact);
+        contactService.saveAndFlush(contact);
 
-        int databaseSizeBeforeDelete = contactRepository.findAll().size();
+        int databaseSizeBeforeDelete = contactService.findAll().size();
 
         // Get the contact
         restContactMockMvc.perform(delete("/api/contacts/{id}", contact.getId())
@@ -306,7 +305,7 @@ public class ContactResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Contact> contactList = contactRepository.findAll();
+        List<Contact> contactList = contactService.findAll();
         assertThat(contactList).hasSize(databaseSizeBeforeDelete - 1);
     }
 

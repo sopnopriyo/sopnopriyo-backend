@@ -2,7 +2,7 @@ package com.sopnopriyo.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Contact;
-import com.sopnopriyo.application.repository.ContactRepository;
+import com.sopnopriyo.application.service.ContactService;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
@@ -34,10 +34,10 @@ public class ContactResource {
 
     private static final String ENTITY_NAME = "contact";
 
-    private final ContactRepository contactRepository;
+    private final ContactService contactService;
 
-    public ContactResource(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
+    public ContactResource(ContactService contactService) {
+        this.contactService = contactService;
     }
 
     /**
@@ -54,7 +54,7 @@ public class ContactResource {
         if (contact.getId() != null) {
             throw new BadRequestAlertException("A new contact cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Contact result = contactRepository.save(contact);
+        Contact result = contactService.save(contact);
         return ResponseEntity.created(new URI("/api/contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -76,7 +76,7 @@ public class ContactResource {
         if (contact.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Contact result = contactRepository.save(contact);
+        Contact result = contactService.save(contact);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, contact.getId().toString()))
             .body(result);
@@ -92,7 +92,7 @@ public class ContactResource {
     @Timed
     public ResponseEntity<List<Contact>> getAllContacts(Pageable pageable) {
         log.debug("REST request to get a page of Contacts");
-        Page<Contact> page = contactRepository.findAll(pageable);
+        Page<Contact> page = contactService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/contacts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +107,7 @@ public class ContactResource {
     @Timed
     public ResponseEntity<Contact> getContact(@PathVariable Long id) {
         log.debug("REST request to get Contact : {}", id);
-        Optional<Contact> contact = contactRepository.findById(id);
+        Optional<Contact> contact = contactService.findById(id);
         return ResponseUtil.wrapOrNotFound(contact);
     }
 
@@ -122,7 +122,7 @@ public class ContactResource {
     public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
         log.debug("REST request to delete Contact : {}", id);
 
-        contactRepository.deleteById(id);
+        contactService.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }
