@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.User;
 import com.sopnopriyo.application.repository.PostRepository;
+import com.sopnopriyo.application.service.PostService;
 import com.sopnopriyo.application.service.UserService;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
@@ -36,11 +37,11 @@ public class PostResource {
 
     private static final String ENTITY_NAME = "post";
 
-	private final PostRepository postRepository;
+	private final PostService postService;
 	private final UserService userService;
 
-    public PostResource(PostRepository postRepository, UserService userService) {
-		this.postRepository = postRepository;
+    public PostResource(PostService postService, UserService userService) {
+		this.postService = postService;
 		this.userService = userService;
     }
 
@@ -60,7 +61,7 @@ public class PostResource {
 		}
 		final User user = userService.getUserWithAuthorities().get();
 		post.setUser(user);
-        Post result = postRepository.save(post);
+        Post result = postService.save(post);
         return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -82,7 +83,7 @@ public class PostResource {
         if (post.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Post result = postRepository.save(post);
+        Post result = postService.save(post);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
             .body(result);
@@ -98,7 +99,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page = postRepository.findByUserIsCurrentUser(pageable);
+        Page<Post> page = postService.findByUserIsCurrentUser(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -113,7 +114,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<Post> getPost(@PathVariable Long id) {
         log.debug("REST request to get Post : {}", id);
-        Optional<Post> post = postRepository.findById(id);
+        Optional<Post> post = postService.findById(id);
         return ResponseUtil.wrapOrNotFound(post);
     }
 
@@ -128,7 +129,7 @@ public class PostResource {
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         log.debug("REST request to delete Post : {}", id);
 
-        postRepository.deleteById(id);
+        postService.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

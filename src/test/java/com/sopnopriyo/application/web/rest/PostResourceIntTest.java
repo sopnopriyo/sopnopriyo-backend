@@ -5,6 +5,7 @@ import com.sopnopriyo.application.SopnopriyoApp;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.repository.UserRepository;
+import com.sopnopriyo.application.service.PostService;
 import com.sopnopriyo.application.service.UserService;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
@@ -70,6 +71,9 @@ public class PostResourceIntTest {
 	private UserRepository userRepository;
 
 	@Autowired
+    private PostService postService;
+
+	@Autowired
 	private UserService userService;
 
     @Autowired
@@ -91,7 +95,7 @@ public class PostResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PostResource postResource = new PostResource(postRepository, userService);
+        final PostResource postResource = new PostResource(postService, userService);
         this.restPostMockMvc = MockMvcBuilders.standaloneSetup(postResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -222,7 +226,7 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.[*].coverImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_COVER_IMAGE))))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-    
+
 
     @Test
     @Transactional

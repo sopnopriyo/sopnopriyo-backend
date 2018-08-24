@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Service class for managing posts.
  */
@@ -22,7 +24,7 @@ public class PostService {
 	private final Logger log = LoggerFactory.getLogger(UserService.class);
 
 	private final UserRepository userRepository;
-	
+
 	private final PostRepository postRepository;
 
 	private final CacheManager cacheManager;
@@ -37,4 +39,15 @@ public class PostService {
 		return postRepository.findByUserIsCurrentUser(pageable);
 	}
 
+	public Post save(Post post) {
+	    return postRepository.save(post);
+    }
+
+    public Optional<Post> findById(Long id) {
+	    return postRepository.findById(id);
+    }
+
+    public void deleteById(long id) {
+	    postRepository.deleteById(id);
+    }
 }
