@@ -3,7 +3,6 @@ package com.sopnopriyo.application.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.User;
-import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.service.PostService;
 import com.sopnopriyo.application.service.UserService;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;

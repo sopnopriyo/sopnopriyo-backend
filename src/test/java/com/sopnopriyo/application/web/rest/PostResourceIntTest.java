@@ -3,7 +3,6 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.SopnopriyoApp;
 
 import com.sopnopriyo.application.domain.Post;
-import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.repository.UserRepository;
 import com.sopnopriyo.application.service.PostService;
 import com.sopnopriyo.application.service.UserService;
@@ -63,9 +62,6 @@ public class PostResourceIntTest {
 
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    @Autowired
-    private PostRepository postRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -131,7 +127,7 @@ public class PostResourceIntTest {
 	@Transactional
 	@WithMockUser
     public void createPost() throws Exception {
-        int databaseSizeBeforeCreate = postRepository.findAll().size();
+        int databaseSizeBeforeCreate = postService.findAll().size();
 
         // Create the Post
         restPostMockMvc.perform(post("/api/posts")
@@ -140,7 +136,7 @@ public class PostResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Post in the database
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeCreate + 1);
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(DEFAULT_TITLE);
@@ -155,7 +151,7 @@ public class PostResourceIntTest {
 	@Transactional
 	@WithMockUser
     public void createPostWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = postRepository.findAll().size();
+        int databaseSizeBeforeCreate = postService.findAll().size();
 
         // Create the Post with an existing ID
         post.setId(1L);
@@ -167,14 +163,14 @@ public class PostResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Post in the database
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkTitleIsRequired() throws Exception {
-        int databaseSizeBeforeTest = postRepository.findAll().size();
+        int databaseSizeBeforeTest = postService.findAll().size();
         // set the field null
         post.setTitle(null);
 
@@ -185,14 +181,14 @@ public class PostResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(post)))
             .andExpect(status().isBadRequest());
 
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = postRepository.findAll().size();
+        int databaseSizeBeforeTest = postService.findAll().size();
         // set the field null
         post.setDate(null);
 
@@ -203,7 +199,7 @@ public class PostResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(post)))
             .andExpect(status().isBadRequest());
 
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeTest);
     }
 
@@ -212,7 +208,7 @@ public class PostResourceIntTest {
 	@WithMockUser
     public void getAllPosts() throws Exception {
         // Initialize the database
-        postRepository.saveAndFlush(post);
+        postService.saveAndFlush(post);
 
         // Get all the postList
         restPostMockMvc.perform(get("/api/posts?sort=id,desc"))
@@ -232,7 +228,7 @@ public class PostResourceIntTest {
     @Transactional
     public void getPost() throws Exception {
         // Initialize the database
-        postRepository.saveAndFlush(post);
+        postService.saveAndFlush(post);
 
         // Get the post
         restPostMockMvc.perform(get("/api/posts/{id}", post.getId()))
@@ -258,12 +254,12 @@ public class PostResourceIntTest {
     @Transactional
     public void updatePost() throws Exception {
         // Initialize the database
-        postRepository.saveAndFlush(post);
+        postService.saveAndFlush(post);
 
-        int databaseSizeBeforeUpdate = postRepository.findAll().size();
+        int databaseSizeBeforeUpdate = postService.findAll().size();
 
         // Update the post
-        Post updatedPost = postRepository.findById(post.getId()).get();
+        Post updatedPost = postService.findById(post.getId()).get();
         // Disconnect from session so that the updates on updatedPost are not directly saved in db
         em.detach(updatedPost);
         updatedPost
@@ -280,7 +276,7 @@ public class PostResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Post in the database
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeUpdate);
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(UPDATED_TITLE);
@@ -294,7 +290,7 @@ public class PostResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingPost() throws Exception {
-        int databaseSizeBeforeUpdate = postRepository.findAll().size();
+        int databaseSizeBeforeUpdate = postService.findAll().size();
 
         // Create the Post
 
@@ -305,7 +301,7 @@ public class PostResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Post in the database
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeUpdate);
     }
 
@@ -313,9 +309,9 @@ public class PostResourceIntTest {
     @Transactional
     public void deletePost() throws Exception {
         // Initialize the database
-        postRepository.saveAndFlush(post);
+        postService.saveAndFlush(post);
 
-        int databaseSizeBeforeDelete = postRepository.findAll().size();
+        int databaseSizeBeforeDelete = postService.findAll().size();
 
         // Get the post
         restPostMockMvc.perform(delete("/api/posts/{id}", post.getId())
@@ -323,7 +319,7 @@ public class PostResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Post> postList = postRepository.findAll();
+        List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeDelete - 1);
     }
 

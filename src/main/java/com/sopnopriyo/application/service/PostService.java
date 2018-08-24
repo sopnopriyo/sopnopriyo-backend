@@ -2,7 +2,6 @@ package com.sopnopriyo.application.service;
 
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.repository.PostRepository;
-import com.sopnopriyo.application.repository.UserRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -23,17 +23,22 @@ public class PostService {
 
 	private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-	private final UserRepository userRepository;
-
 	private final PostRepository postRepository;
 
 	private final CacheManager cacheManager;
 
-	public PostService(UserRepository userRepository, PostRepository postRepository, CacheManager cacheManager) {
-		this.userRepository = userRepository;
+	public PostService(PostRepository postRepository, CacheManager cacheManager) {
 		this.postRepository = postRepository;
 		this.cacheManager = cacheManager;
 	}
+
+    public Optional<Post> findById(Long id) {
+        return postRepository.findById(id);
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
 
 	public Page<Post> findByUserIsCurrentUser(Pageable pageable) {
 		return postRepository.findByUserIsCurrentUser(pageable);
@@ -43,8 +48,8 @@ public class PostService {
 	    return postRepository.save(post);
     }
 
-    public Optional<Post> findById(Long id) {
-	    return postRepository.findById(id);
+    public Post saveAndFlush(Post post) {
+        return postRepository.saveAndFlush(post);
     }
 
     public void deleteById(long id) {
