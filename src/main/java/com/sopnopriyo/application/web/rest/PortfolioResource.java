@@ -2,7 +2,7 @@ package com.sopnopriyo.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Portfolio;
-import com.sopnopriyo.application.repository.PortfolioRepository;
+import com.sopnopriyo.application.service.PortfolioService;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
@@ -34,10 +34,10 @@ public class PortfolioResource {
 
     private static final String ENTITY_NAME = "portfolio";
 
-    private final PortfolioRepository portfolioRepository;
+    private final PortfolioService portfolioService;
 
-    public PortfolioResource(PortfolioRepository portfolioRepository) {
-        this.portfolioRepository = portfolioRepository;
+    public PortfolioResource(PortfolioService portfolioService) {
+        this.portfolioService = portfolioService;
     }
 
     /**
@@ -54,7 +54,7 @@ public class PortfolioResource {
         if (portfolio.getId() != null) {
             throw new BadRequestAlertException("A new portfolio cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Portfolio result = portfolioRepository.save(portfolio);
+        Portfolio result = portfolioService.save(portfolio);
         return ResponseEntity.created(new URI("/api/portfolios/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -76,7 +76,7 @@ public class PortfolioResource {
         if (portfolio.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Portfolio result = portfolioRepository.save(portfolio);
+        Portfolio result = portfolioService.save(portfolio);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, portfolio.getId().toString()))
             .body(result);
@@ -92,7 +92,7 @@ public class PortfolioResource {
     @Timed
     public ResponseEntity<List<Portfolio>> getAllPortfolios(Pageable pageable) {
         log.debug("REST request to get a page of Portfolios");
-        Page<Portfolio> page = portfolioRepository.findAll(pageable);
+        Page<Portfolio> page = portfolioService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/portfolios");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -107,7 +107,7 @@ public class PortfolioResource {
     @Timed
     public ResponseEntity<Portfolio> getPortfolio(@PathVariable Long id) {
         log.debug("REST request to get Portfolio : {}", id);
-        Optional<Portfolio> portfolio = portfolioRepository.findById(id);
+        Optional<Portfolio> portfolio = portfolioService.findById(id);
         return ResponseUtil.wrapOrNotFound(portfolio);
     }
 
@@ -122,7 +122,7 @@ public class PortfolioResource {
     public ResponseEntity<Void> deletePortfolio(@PathVariable Long id) {
         log.debug("REST request to delete Portfolio : {}", id);
 
-        portfolioRepository.deleteById(id);
+        portfolioService.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }
