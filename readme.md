@@ -11,7 +11,8 @@ To start the application in the dev profile, simply run:
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
 
-
+### Swagger specification
+    http://localhost:8080/v2/api-docs
 
 ## Building for production
 
