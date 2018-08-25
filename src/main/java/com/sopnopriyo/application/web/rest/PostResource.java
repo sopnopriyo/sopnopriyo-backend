@@ -3,6 +3,7 @@ package com.sopnopriyo.application.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.User;
+import com.sopnopriyo.application.security.SecurityUtils;
 import com.sopnopriyo.application.service.PostService;
 import com.sopnopriyo.application.service.UserService;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
@@ -79,9 +80,16 @@ public class PostResource {
     @Timed
     public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post) throws URISyntaxException {
         log.debug("REST request to update Post : {}", post);
+
         if (post.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        if (post != null && post.getUser() != null &&
+            !post.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
+            return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
         Post result = postService.save(post);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
@@ -98,7 +106,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page = postService.findByUserIsCurrentUser(pageable);
+        Page<Post> page = postService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -127,7 +135,11 @@ public class PostResource {
     @Timed
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         log.debug("REST request to delete Post : {}", id);
-
+        Optional<Post> post = postService.findById(id);
+        if (post != null && post.get().getUser() != null &&
+            !post.get().getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
+            return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
         postService.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

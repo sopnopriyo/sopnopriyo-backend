@@ -88,6 +88,7 @@ public class PostResourceIntTest {
 
     private Post post;
 
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -252,6 +253,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void updatePost() throws Exception {
         // Initialize the database
         postService.saveAndFlush(post);
@@ -289,6 +291,34 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    public void updatePostWithoutAuth() throws Exception {
+        // Initialize the database
+        postService.saveAndFlush(post);
+
+        int databaseSizeBeforeUpdate = postService.findAll().size();
+
+        // Update the post
+        Post updatedPost = postService.findById(post.getId()).get();
+        // Disconnect from session so that the updates on updatedPost are not directly saved in db
+        em.detach(updatedPost);
+        updatedPost
+            .title(UPDATED_TITLE)
+            .body(UPDATED_BODY)
+            .status(UPDATED_STATUS)
+            .coverImage(UPDATED_COVER_IMAGE)
+            .coverImageContentType(UPDATED_COVER_IMAGE_CONTENT_TYPE)
+            .date(UPDATED_DATE);
+
+        restPostMockMvc.perform(put("/api/posts")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedPost)))
+            .andExpect(status().isUnauthorized());
+
+        assertThat(databaseSizeBeforeUpdate).isEqualTo(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
     public void updateNonExistingPost() throws Exception {
         int databaseSizeBeforeUpdate = postService.findAll().size();
 
@@ -306,6 +336,7 @@ public class PostResourceIntTest {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void deletePost() throws Exception {
         // Initialize the database

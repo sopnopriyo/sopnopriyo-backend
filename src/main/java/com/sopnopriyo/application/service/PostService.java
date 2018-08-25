@@ -40,6 +40,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public Page<Post> findAll(Pageable pageable) {
+	    return postRepository.findAll(pageable);
+    }
+
 	public Page<Post> findByUserIsCurrentUser(Pageable pageable) {
 		return postRepository.findByUserIsCurrentUser(pageable);
 	}
