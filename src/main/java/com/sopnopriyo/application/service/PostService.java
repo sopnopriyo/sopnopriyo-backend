@@ -44,7 +44,7 @@ public class PostService {
 	    return postRepository.findAll(pageable);
     }
 
-	public Page<Post> findByUserIsCurrentUser(Pageable pageable) {
+	public Page<Post> findByCurrentUser(Pageable pageable) {
 		return postRepository.findByUserIsCurrentUser(pageable);
 	}
 
