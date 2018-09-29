@@ -9,7 +9,7 @@ import { IPost } from 'app/shared/model/post.model';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, deleteEntity } from './post.reducer';
 
-export interface IPostDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IPostDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export class PostDeleteDialog extends React.Component<IPostDeleteDialogProps> {
   componentDidMount() {

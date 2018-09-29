@@ -9,7 +9,7 @@ import { IContact } from 'app/shared/model/contact.model';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, deleteEntity } from './contact.reducer';
 
-export interface IContactDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IContactDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export class ContactDeleteDialog extends React.Component<IContactDeleteDialogProps> {
   componentDidMount() {

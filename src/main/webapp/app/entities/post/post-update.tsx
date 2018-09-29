@@ -16,7 +16,7 @@ import { IPost } from 'app/shared/model/post.model';
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { keysToValues } from 'app/shared/util/entity-utils';
 
-export interface IPostUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IPostUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export interface IPostUpdateState {
   isNew: boolean;

@@ -12,7 +12,7 @@ import { IContact } from 'app/shared/model/contact.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface IContactDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IContactDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export class ContactDetail extends React.Component<IContactDetailProps> {
   componentDidMount() {

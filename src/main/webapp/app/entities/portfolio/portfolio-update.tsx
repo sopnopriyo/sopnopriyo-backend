@@ -14,7 +14,7 @@ import { IPortfolio } from 'app/shared/model/portfolio.model';
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { keysToValues } from 'app/shared/util/entity-utils';
 
-export interface IPortfolioUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IPortfolioUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export interface IPortfolioUpdateState {
   isNew: boolean;

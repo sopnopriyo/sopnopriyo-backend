@@ -12,7 +12,7 @@ import { IPortfolio } from 'app/shared/model/portfolio.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
-export interface IPortfolioDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IPortfolioDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export class PortfolioDetail extends React.Component<IPortfolioDetailProps> {
   componentDidMount() {

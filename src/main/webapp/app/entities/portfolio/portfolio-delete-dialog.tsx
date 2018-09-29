@@ -9,7 +9,7 @@ import { IPortfolio } from 'app/shared/model/portfolio.model';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, deleteEntity } from './portfolio.reducer';
 
-export interface IPortfolioDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IPortfolioDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export class PortfolioDeleteDialog extends React.Component<IPortfolioDeleteDialogProps> {
   componentDidMount() {

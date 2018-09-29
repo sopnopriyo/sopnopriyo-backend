@@ -14,7 +14,7 @@ import { IContact } from 'app/shared/model/contact.model';
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { keysToValues } from 'app/shared/util/entity-utils';
 
-export interface IContactUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: number }> {}
+export interface IContactUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export interface IContactUpdateState {
   isNew: boolean;
