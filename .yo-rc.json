@@ -16,19 +16,16 @@
     "devDatabaseType": "h2Disk",
     "prodDatabaseType": "postgresql",
     "searchEngine": false,
-    "enableSwaggerCodegen": false,
+    "enableSwaggerCodegen": true,
     "messageBroker": false,
     "buildTool": "maven",
-    "useSass": false,
-    "clientPackageManager": "yarn",
     "testFrameworks": [],
-    "enableTranslation": false,
     "nativeLanguage": "en",
     "languages": [
       "en"
     ],
-    "clientFramework": "react",
     "jhiPrefix": "jhi",
-    "herokuDeployType": "jar"
+    "herokuDeployType": "jar",
+    "skipClient": true
   }
 }
