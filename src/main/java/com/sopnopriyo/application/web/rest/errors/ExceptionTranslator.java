@@ -43,7 +43,6 @@ public class ExceptionTranslator implements ProblemHandling {
             return entity;
         }
         ProblemBuilder builder = Problem.builder()
-            .withType(Problem.DEFAULT_TYPE.equals(problem.getType()) ? ErrorConstants.DEFAULT_TYPE : problem.getType())
             .withStatus(problem.getStatus())
             .withTitle(problem.getTitle())
             .with("path", request.getNativeRequest(HttpServletRequest.class).getRequestURI());
@@ -74,7 +73,6 @@ public class ExceptionTranslator implements ProblemHandling {
             .collect(Collectors.toList());
 
         Problem problem = Problem.builder()
-            .withType(ErrorConstants.CONSTRAINT_VIOLATION_TYPE)
             .withTitle("Method argument not valid")
             .withStatus(defaultConstraintViolationStatus())
             .with("message", ErrorConstants.ERR_VALIDATION)
