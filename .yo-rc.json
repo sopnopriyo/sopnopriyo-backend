@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "applicationType": "monolith",
+    "applicationType": "gateway",
     "gitCompany": "",
     "baseName": "sopnopriyo",
     "packageName": "com.sopnopriyo.application",

@@ -78,9 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/app/**/*.{js,html}")
             .antMatchers("/i18n/**")
             .antMatchers("/content/**")
-            .antMatchers("/swagger-ui/index.html")
-            .antMatchers("/test/**")
-            .antMatchers("/h2-console/**");
+            .antMatchers("/test/**");
     }
 
     @Override
@@ -115,9 +113,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers("/v2/api-docs/**").permitAll()
-            .antMatchers("/swagger-resources/configuration/ui").permitAll()
-            .antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/v2/api-docs/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/swagger-resources/configuration/ui").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/swagger-ui/index.html").denyAll()
         .and()
             .apply(securityConfigurerAdapter());
 
