@@ -106,6 +106,13 @@ jhipster:
                 enabled: false
                 update-interval: 3
                 url:
+    cors:
+        allowed-origins: "https://sopnopriyo-218815.firebaseapp.com"
+        allowed-methods: "*"
+        allowed-headers: "*"
+        exposed-headers: "Authorization,Link,X-Total-Count"
+        allow-credentials: true
+        max-age: 1800
     security:
         authentication:
             jwt:
