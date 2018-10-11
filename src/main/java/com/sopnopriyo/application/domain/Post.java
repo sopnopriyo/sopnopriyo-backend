@@ -1,5 +1,6 @@
 package com.sopnopriyo.application.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -35,6 +36,7 @@ public class Post implements Serializable {
 
     
     @Lob
+    @NotNull
     @Column(name = "jhi_body", nullable = false)
     private String body;
 
@@ -44,16 +46,17 @@ public class Post implements Serializable {
 
     
     @Lob
-    @Column(name = "cover_image", nullable = false)
+    @Column(name = "cover_image")
     private byte[] coverImage;
 
-    @Column(name = "cover_image_content_type", nullable = false)
+    @Column(name = "cover_image_content_type")
     private String coverImageContentType;
 
     @NotNull
-    @Column(name = "jhi_date", nullable = false)
+    @Column(name = "jhi_date")
     private Instant date;
-
+    
+    @JsonIgnore
     @ManyToOne
     @JsonIgnoreProperties("")
     private User user;

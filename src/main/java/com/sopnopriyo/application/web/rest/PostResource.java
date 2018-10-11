@@ -90,6 +90,10 @@ public class PostResource {
             return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
+        // set the
+        final User user = userService.getUserWithAuthorities().get();
+        post.setUser(user);
+
         Post result = postService.save(post);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
@@ -106,7 +110,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page = postService.findByCurrentUser(pageable);
+        Page<Post> page = postService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
