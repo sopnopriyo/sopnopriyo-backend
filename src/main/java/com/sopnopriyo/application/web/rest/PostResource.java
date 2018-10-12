@@ -3,6 +3,7 @@ package com.sopnopriyo.application.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.User;
+import com.sopnopriyo.application.security.AuthoritiesConstants;
 import com.sopnopriyo.application.security.SecurityUtils;
 import com.sopnopriyo.application.service.PostService;
 import com.sopnopriyo.application.service.UserService;
@@ -17,12 +18,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +74,7 @@ public class PostResource {
     /**
      * PUT  /posts : Updates an existing post.
      *
-     * @param post the post to update
+     * @param editedPost the post to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated post,
      * or with status 400 (Bad Request) if the post is not valid,
      * or with status 500 (Internal Server Error) if the post couldn't be updated
@@ -78,21 +82,30 @@ public class PostResource {
      */
     @PutMapping("/posts")
     @Timed
-    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post) throws URISyntaxException {
-        log.debug("REST request to update Post : {}", post);
+    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post editedPost) throws URISyntaxException {
+        log.debug("REST request to update Post : {}", editedPost);
 
-        if (post.getId() == null) {
+        if (editedPost.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
 
-        if (post != null && post.getUser() != null &&
-            !post.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
+        Post post = postService.findById(editedPost.getId()).get();
+
+        if (post == null) {
+            return new ResponseEntity("NOT FOUND", HttpStatus.NOT_FOUND);
+        }
+
+        if (!post.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
             return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
-        // set the
-        final User user = userService.getUserWithAuthorities().get();
-        post.setUser(user);
+        post
+            .title(editedPost.getTitle())
+            .body(editedPost.getBody())
+            .status(editedPost.getStatus())
+            .coverImage(editedPost.getCoverImage())
+            .coverImageContentType(editedPost.getCoverImageContentType())
+            .date(editedPost.getDate());
 
         Post result = postService.save(post);
         return ResponseEntity.ok()
