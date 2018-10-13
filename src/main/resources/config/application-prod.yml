@@ -107,7 +107,7 @@ jhipster:
                 update-interval: 3
                 url:
     cors:
-        allowed-origins: "https://sopnopriyo-218815.firebaseapp.com,https://sopnopriyo.com,http://sopnopriyo.com"
+        allowed-origins: ${ALLOWED_ORIGIN}
         allowed-methods: "*"
         allowed-headers: "*"
         exposed-headers: "Authorization,Link,X-Total-Count"
@@ -116,7 +116,7 @@ jhipster:
     security:
         authentication:
             jwt:
-                secret: a7b311f0dfa54e7f753d1c06657c897f4c1d5bb2
+                secret: ${JWT_SECRET_KEY}
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
