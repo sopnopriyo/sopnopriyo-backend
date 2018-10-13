@@ -108,7 +108,7 @@ public class PostResource {
             .status(editedPost.getStatus())
             .coverImage(editedPost.getCoverImage())
             .coverImageContentType(editedPost.getCoverImageContentType())
-            .date(Instant.now());
+            .date(editedPost.getDate() == null ? Instant.now() : editedPost.getDate());
 
         Post result = postService.save(post);
         return ResponseEntity.ok()
