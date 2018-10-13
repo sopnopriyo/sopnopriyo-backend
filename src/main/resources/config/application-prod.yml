@@ -107,7 +107,7 @@ jhipster:
                 update-interval: 3
                 url:
     cors:
-        allowed-origins: ${ALLOWED_ORIGIN}
+        allowed-origins: '${ALLOWED_ORIGIN}'
         allowed-methods: "*"
         allowed-headers: "*"
         exposed-headers: "Authorization,Link,X-Total-Count"
