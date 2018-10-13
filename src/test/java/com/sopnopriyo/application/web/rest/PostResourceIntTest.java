@@ -312,7 +312,7 @@ public class PostResourceIntTest {
         restPostMockMvc.perform(put("/api/posts")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedPost)))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isNotFound());
 
         assertThat(databaseSizeBeforeUpdate).isEqualTo(databaseSizeBeforeUpdate);
     }
@@ -333,6 +333,36 @@ public class PostResourceIntTest {
         // Validate the Post in the database
         List<Post> postList = postService.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @WithMockUser
+    @Test
+    @Transactional
+    public void updatePostByAdmin() throws Exception {
+        // Initialize the database
+        postService.saveAndFlush(post);
+
+        int databaseSizeBeforeUpdate = postService.findAll().size();
+
+        // Update the post
+        Post updatedPost = postService.findById(post.getId()).get();
+        // Disconnect from session so that the updates on updatedPost are not directly saved in db
+        em.detach(updatedPost);
+        updatedPost
+            .title(UPDATED_TITLE)
+            .body(UPDATED_BODY)
+            .status(UPDATED_STATUS)
+            .coverImage(UPDATED_COVER_IMAGE)
+            .coverImageContentType(UPDATED_COVER_IMAGE_CONTENT_TYPE)
+            .date(UPDATED_DATE)
+            .user(userRepository.findOneByLogin("admin").get());
+
+        restPostMockMvc.perform(put("/api/posts")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedPost)))
+            .andExpect(status().isOk());
+
+        assertThat(databaseSizeBeforeUpdate).isEqualTo(databaseSizeBeforeUpdate);
     }
 
     @Test

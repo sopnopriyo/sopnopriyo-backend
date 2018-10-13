@@ -95,7 +95,10 @@ public class PostResource {
             return new ResponseEntity("NOT FOUND", HttpStatus.NOT_FOUND);
         }
 
-        if (!post.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
+        User user = userService.getUserWithAuthorities().get();
+
+        if (!post.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse("")) &&
+            !user.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
             return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
         }
 
