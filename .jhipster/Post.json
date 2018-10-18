@@ -1,5 +1,14 @@
 {
-    "name": "Post",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "otherEntityField": "id"
+        }
+    ],
     "fields": [
         {
             "fieldName": "title",
@@ -24,14 +33,6 @@
             "fieldValues": "DRAFT,PUBLISHED"
         },
         {
-            "fieldName": "coverImage",
-            "fieldType": "byte[]",
-            "fieldTypeBlobContent": "image",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "date",
             "fieldType": "Instant",
             "fieldValidateRules": [
@@ -39,21 +40,11 @@
             ]
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "relationshipName": "user",
-            "otherEntityName": "user",
-            "otherEntityField": "id"
-        }
-    ],
     "changelogDate": "20180729031617",
-    "entityTableName": "post",
     "dto": "no",
-    "pagination": "no",
+    "searchEngine": false,
     "service": "no",
+    "entityTableName": "post",
     "jpaMetamodelFiltering": false,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "no"
 }

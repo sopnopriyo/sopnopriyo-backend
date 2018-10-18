@@ -33,13 +33,6 @@
                 <constraints nullable="true" />
             </column>
 
-            <column name="cover_image" type="longblob">
-                <constraints nullable="false" />
-            </column>
-            <column name="cover_image_content_type" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-
             <column name="jhi_date" type="datetime">
                 <constraints nullable="false" />
             </column>

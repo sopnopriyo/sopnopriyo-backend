@@ -1,6 +1,5 @@
 package com.sopnopriyo.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -44,19 +43,10 @@ public class Post implements Serializable {
     @Column(name = "status")
     private Status status;
 
-    
-    @Lob
-    @Column(name = "cover_image")
-    private byte[] coverImage;
-
-    @Column(name = "cover_image_content_type")
-    private String coverImageContentType;
-
     @NotNull
-    @Column(name = "jhi_date")
+    @Column(name = "jhi_date", nullable = false)
     private Instant date;
-    
-    @JsonIgnore
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private User user;
@@ -107,32 +97,6 @@ public class Post implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public byte[] getCoverImage() {
-        return coverImage;
-    }
-
-    public Post coverImage(byte[] coverImage) {
-        this.coverImage = coverImage;
-        return this;
-    }
-
-    public void setCoverImage(byte[] coverImage) {
-        this.coverImage = coverImage;
-    }
-
-    public String getCoverImageContentType() {
-        return coverImageContentType;
-    }
-
-    public Post coverImageContentType(String coverImageContentType) {
-        this.coverImageContentType = coverImageContentType;
-        return this;
-    }
-
-    public void setCoverImageContentType(String coverImageContentType) {
-        this.coverImageContentType = coverImageContentType;
     }
 
     public Instant getDate() {
@@ -189,8 +153,6 @@ public class Post implements Serializable {
             ", title='" + getTitle() + "'" +
             ", body='" + getBody() + "'" +
             ", status='" + getStatus() + "'" +
-            ", coverImage='" + getCoverImage() + "'" +
-            ", coverImageContentType='" + getCoverImageContentType() + "'" +
             ", date='" + getDate() + "'" +
             "}";
     }

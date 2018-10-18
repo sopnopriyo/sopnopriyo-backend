@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -54,11 +53,6 @@ public class PostResourceIntTest {
 
     private static final Status DEFAULT_STATUS = Status.DRAFT;
     private static final Status UPDATED_STATUS = Status.PUBLISHED;
-
-    private static final byte[] DEFAULT_COVER_IMAGE = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_COVER_IMAGE = TestUtil.createByteArray(2, "1");
-    private static final String DEFAULT_COVER_IMAGE_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_COVER_IMAGE_CONTENT_TYPE = "image/png";
 
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -112,8 +106,6 @@ public class PostResourceIntTest {
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
             .status(DEFAULT_STATUS)
-            .coverImage(DEFAULT_COVER_IMAGE)
-            .coverImageContentType(DEFAULT_COVER_IMAGE_CONTENT_TYPE)
 			.date(DEFAULT_DATE)
 			.user(userRepository.findOneByLogin("user").get());
         return post;
@@ -143,8 +135,6 @@ public class PostResourceIntTest {
         assertThat(testPost.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPost.getBody()).isEqualTo(DEFAULT_BODY);
         assertThat(testPost.getStatus()).isEqualTo(DEFAULT_STATUS);
-        assertThat(testPost.getCoverImage()).isEqualTo(DEFAULT_COVER_IMAGE);
-        assertThat(testPost.getCoverImageContentType()).isEqualTo(DEFAULT_COVER_IMAGE_CONTENT_TYPE);
         assertThat(testPost.getDate()).isEqualTo(DEFAULT_DATE);
     }
 
@@ -219,8 +209,6 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].body").value(hasItem(DEFAULT_BODY.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
-            .andExpect(jsonPath("$.[*].coverImageContentType").value(hasItem(DEFAULT_COVER_IMAGE_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].coverImage").value(hasItem(Base64Utils.encodeToString(DEFAULT_COVER_IMAGE))))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
 
@@ -239,8 +227,6 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
-            .andExpect(jsonPath("$.coverImageContentType").value(DEFAULT_COVER_IMAGE_CONTENT_TYPE))
-            .andExpect(jsonPath("$.coverImage").value(Base64Utils.encodeToString(DEFAULT_COVER_IMAGE)))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
     @Test
@@ -268,8 +254,6 @@ public class PostResourceIntTest {
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
             .status(UPDATED_STATUS)
-            .coverImage(UPDATED_COVER_IMAGE)
-            .coverImageContentType(UPDATED_COVER_IMAGE_CONTENT_TYPE)
             .date(UPDATED_DATE);
 
         restPostMockMvc.perform(put("/api/posts")
@@ -284,8 +268,6 @@ public class PostResourceIntTest {
         assertThat(testPost.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPost.getBody()).isEqualTo(UPDATED_BODY);
         assertThat(testPost.getStatus()).isEqualTo(UPDATED_STATUS);
-        assertThat(testPost.getCoverImage()).isEqualTo(UPDATED_COVER_IMAGE);
-        assertThat(testPost.getCoverImageContentType()).isEqualTo(UPDATED_COVER_IMAGE_CONTENT_TYPE);
         assertThat(testPost.getDate()).isEqualTo(UPDATED_DATE);
     }
 
@@ -305,8 +287,6 @@ public class PostResourceIntTest {
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
             .status(UPDATED_STATUS)
-            .coverImage(UPDATED_COVER_IMAGE)
-            .coverImageContentType(UPDATED_COVER_IMAGE_CONTENT_TYPE)
             .date(UPDATED_DATE);
 
         restPostMockMvc.perform(put("/api/posts")
@@ -352,8 +332,6 @@ public class PostResourceIntTest {
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
             .status(UPDATED_STATUS)
-            .coverImage(UPDATED_COVER_IMAGE)
-            .coverImageContentType(UPDATED_COVER_IMAGE_CONTENT_TYPE)
             .date(UPDATED_DATE)
             .user(userRepository.findOneByLogin("admin").get());
 
