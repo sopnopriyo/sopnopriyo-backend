@@ -38,6 +38,10 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "coverImageUrl",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20180729031617",

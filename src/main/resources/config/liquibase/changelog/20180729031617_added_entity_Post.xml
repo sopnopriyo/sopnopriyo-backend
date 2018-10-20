@@ -37,6 +37,10 @@
                 <constraints nullable="false" />
             </column>
 
+            <column name="cover_image_url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
             <column name="user_id" type="bigint">
                 <constraints nullable="true" />
             </column>

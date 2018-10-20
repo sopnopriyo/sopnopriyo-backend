@@ -51,6 +51,10 @@ public class PostResourceIntTest {
     private static final String DEFAULT_BODY = "AAAAAAAAAA";
     private static final String UPDATED_BODY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_COVER_IMAGE_URL = "AAAAAAAAAA";
+    private static final String UPDATED_COVER_IMAGE_URL = "BBBBBBBBBB";
+
+
     private static final Status DEFAULT_STATUS = Status.DRAFT;
     private static final Status UPDATED_STATUS = Status.PUBLISHED;
 
@@ -105,6 +109,7 @@ public class PostResourceIntTest {
         Post post = new Post()
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
+            .coverImageUrl(DEFAULT_COVER_IMAGE_URL)
             .status(DEFAULT_STATUS)
 			.date(DEFAULT_DATE)
 			.user(userRepository.findOneByLogin("user").get());
@@ -134,6 +139,7 @@ public class PostResourceIntTest {
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPost.getBody()).isEqualTo(DEFAULT_BODY);
+        assertThat(testPost.getCoverImageUrl()).isEqualTo(DEFAULT_COVER_IMAGE_URL);
         assertThat(testPost.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testPost.getDate()).isEqualTo(DEFAULT_DATE);
     }
@@ -208,6 +214,7 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(post.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].body").value(hasItem(DEFAULT_BODY.toString())))
+            .andExpect(jsonPath("$.[*].coverImageUrl").value(hasItem(DEFAULT_COVER_IMAGE_URL.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
@@ -226,6 +233,7 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.id").value(post.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
+            .andExpect(jsonPath("$.coverImageUrl").value(DEFAULT_COVER_IMAGE_URL.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
@@ -253,6 +261,7 @@ public class PostResourceIntTest {
         updatedPost
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
+            .coverImageUrl(UPDATED_COVER_IMAGE_URL)
             .status(UPDATED_STATUS)
             .date(UPDATED_DATE);
 
@@ -267,6 +276,7 @@ public class PostResourceIntTest {
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPost.getBody()).isEqualTo(UPDATED_BODY);
+        assertThat(testPost.getCoverImageUrl()).isEqualTo(UPDATED_COVER_IMAGE_URL);
         assertThat(testPost.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testPost.getDate()).isEqualTo(UPDATED_DATE);
     }
@@ -286,6 +296,7 @@ public class PostResourceIntTest {
         updatedPost
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
+            .coverImageUrl(UPDATED_COVER_IMAGE_URL)
             .status(UPDATED_STATUS)
             .date(UPDATED_DATE);
 
@@ -331,6 +342,7 @@ public class PostResourceIntTest {
         updatedPost
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
+            .coverImageUrl(UPDATED_COVER_IMAGE_URL)
             .status(UPDATED_STATUS)
             .date(UPDATED_DATE)
             .user(userRepository.findOneByLogin("admin").get());

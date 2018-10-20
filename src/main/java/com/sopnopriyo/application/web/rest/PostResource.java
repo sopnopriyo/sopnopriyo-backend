@@ -105,6 +105,7 @@ public class PostResource {
         post
             .title(editedPost.getTitle())
             .body(editedPost.getBody())
+            .coverImageUrl(editedPost.getCoverImageUrl())
             .status(editedPost.getStatus())
             .date(editedPost.getDate() == null ? Instant.now() : editedPost.getDate());
 

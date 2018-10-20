@@ -47,6 +47,9 @@ public class Post implements Serializable {
     @Column(name = "jhi_date", nullable = false)
     private Instant date;
 
+    @Column(name = "cover_image_url")
+    private String coverImageUrl;
+
     @ManyToOne
     @JsonIgnoreProperties("")
     private User user;
@@ -112,6 +115,19 @@ public class Post implements Serializable {
         this.date = date;
     }
 
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public Post coverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
+        return this;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
+    }
+
     public User getUser() {
         return user;
     }
@@ -154,6 +170,7 @@ public class Post implements Serializable {
             ", body='" + getBody() + "'" +
             ", status='" + getStatus() + "'" +
             ", date='" + getDate() + "'" +
+            ", coverImageUrl='" + getCoverImageUrl() + "'" +
             "}";
     }
 }
