@@ -25,12 +25,9 @@
       "en"
     ],
     "jhiPrefix": "sp",
-    "herokuDeployType": "jar",
     "skipClient": true,
     "jhipsterVersion": "5.5.0",
     "jwtSecretKey": "MDFhYzViOWExNjAwZjNkOGI5ZTI5OTgzYjczYjI4Y2M1YWNlMjQzMWU0OTYyZTMxZGE4ZTliYTUyOTk0MmI5NmVjOTEyMjY3M2Q4ODViNTcxZDY3MDAwMjczNGM0YmU3ZTU3YTU4N2U5NDI2ZjQ5M2E4NDkzNWE2Njk2MzJkMWU=",
     "enableTranslation": true,
-    "clientPackageManager": "npm",
-    "herokuAppName": "sopnopriyo"
   }
 }
