@@ -6,10 +6,6 @@ language: java
 jdk:
   - oraclejdk8
 sudo: false
-cache:
-  directories:
-    - $HOME/.m2
-    - $HOME/.yarn-cache
 env:
   global:
     - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
@@ -21,7 +17,7 @@ before_install:
   - sudo /etc/init.d/postgresql stop
 script:
   - chmod +x mvnw
-  - ./mvnw clean test
+  - ./mvnw clean install test
 #  - ./mvnw com.heroku.sdk:heroku-maven-plugin:2.0.5:deploy -DskipTests -Pprod -Dheroku.appName=sopnopriyo
 notifications:
   webhooks:
