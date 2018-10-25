@@ -11,18 +11,17 @@ import java.time.Instant;
 import java.util.Objects;
 
 /**
- * A Contact.
+ * A Message.
  */
 @Entity
-@Table(name = "contact")
+@Table(name = "message")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Contact implements Serializable {
+public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -39,7 +38,7 @@ public class Contact implements Serializable {
     private String message;
 
     @NotNull
-    @Column(name = "jhi_date", nullable = false)
+    @Column(name = "sp_date", nullable = false)
     private Instant date;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -55,7 +54,7 @@ public class Contact implements Serializable {
         return name;
     }
 
-    public Contact name(String name) {
+    public Message name(String name) {
         this.name = name;
         return this;
     }
@@ -68,7 +67,7 @@ public class Contact implements Serializable {
         return email;
     }
 
-    public Contact email(String email) {
+    public Message email(String email) {
         this.email = email;
         return this;
     }
@@ -81,7 +80,7 @@ public class Contact implements Serializable {
         return message;
     }
 
-    public Contact message(String message) {
+    public Message message(String message) {
         this.message = message;
         return this;
     }
@@ -94,7 +93,7 @@ public class Contact implements Serializable {
         return date;
     }
 
-    public Contact date(Instant date) {
+    public Message date(Instant date) {
         this.date = date;
         return this;
     }
@@ -112,11 +111,11 @@ public class Contact implements Serializable {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Contact contact = (Contact) o;
-        if (contact.getId() == null || getId() == null) {
+        Message message = (Message) o;
+        if (message.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(getId(), contact.getId());
+        return Objects.equals(getId(), message.getId());
     }
 
     @Override
@@ -126,7 +125,7 @@ public class Contact implements Serializable {
 
     @Override
     public String toString() {
-        return "Contact{" +
+        return "Message{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", email='" + getEmail() + "'" +

@@ -2,11 +2,7 @@ package com.sopnopriyo.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
-import com.sopnopriyo.application.domain.User;
-import com.sopnopriyo.application.security.AuthoritiesConstants;
-import com.sopnopriyo.application.security.SecurityUtils;
-import com.sopnopriyo.application.service.PostService;
-import com.sopnopriyo.application.service.UserService;
+import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
@@ -18,15 +14,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,12 +34,10 @@ public class PostResource {
 
     private static final String ENTITY_NAME = "post";
 
-	private final PostService postService;
-	private final UserService userService;
+    private PostRepository postRepository;
 
-    public PostResource(PostService postService, UserService userService) {
-		this.postService = postService;
-		this.userService = userService;
+    public PostResource(PostRepository postRepository) {
+        this.postRepository = postRepository;
     }
 
     /**
@@ -57,15 +48,13 @@ public class PostResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/posts")
-	@Timed
+    @Timed
     public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) throws URISyntaxException {
         log.debug("REST request to save Post : {}", post);
         if (post.getId() != null) {
             throw new BadRequestAlertException("A new post cannot already have an ID", ENTITY_NAME, "idexists");
-		}
-		final User user = userService.getUserWithAuthorities().get();
-		post.setUser(user);
-        Post result = postService.save(post);
+        }
+        Post result = postRepository.save(post);
         return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -74,7 +63,7 @@ public class PostResource {
     /**
      * PUT  /posts : Updates an existing post.
      *
-     * @param editedPost the post to update
+     * @param post the post to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated post,
      * or with status 400 (Bad Request) if the post is not valid,
      * or with status 500 (Internal Server Error) if the post couldn't be updated
@@ -82,33 +71,12 @@ public class PostResource {
      */
     @PutMapping("/posts")
     @Timed
-    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post editedPost) throws URISyntaxException {
-        log.debug("REST request to update Post : {}", editedPost);
-
-        if (editedPost.getId() == null) {
+    public ResponseEntity<Post> updatePost(@Valid @RequestBody Post post) throws URISyntaxException {
+        log.debug("REST request to update Post : {}", post);
+        if (post.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-
-        Post post = postService.findById(editedPost.getId()).get();
-
-        if (post == null) {
-            return new ResponseEntity("NOT FOUND", HttpStatus.NOT_FOUND);
-        }
-
-        User user = userService.getUserWithAuthorities().get();
-
-        if (!post.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse("")) &&
-            !user.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
-            return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-
-        post
-            .title(editedPost.getTitle())
-            .body(editedPost.getBody())
-            .status(editedPost.getStatus())
-            .date(editedPost.getDate() == null ? Instant.now() : editedPost.getDate());
-
-        Post result = postService.save(post);
+        Post result = postRepository.save(post);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
             .body(result);
@@ -124,7 +92,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page = postService.findAll(pageable);
+        Page<Post> page = postRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -139,7 +107,7 @@ public class PostResource {
     @Timed
     public ResponseEntity<Post> getPost(@PathVariable Long id) {
         log.debug("REST request to get Post : {}", id);
-        Optional<Post> post = postService.findById(id);
+        Optional<Post> post = postRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(post);
     }
 
@@ -153,12 +121,8 @@ public class PostResource {
     @Timed
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         log.debug("REST request to delete Post : {}", id);
-        Optional<Post> post = postService.findById(id);
-        if (post != null && post.get().getUser() != null &&
-            !post.get().getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
-            return new ResponseEntity("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
-        postService.deleteById(id);
+
+        postRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 }

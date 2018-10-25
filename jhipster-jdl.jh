@@ -5,20 +5,20 @@ enum Status {
 entity Post {
 	title String required maxlength(255),
     body TextBlob required,
-    status Status,
-    coverImage ImageBlob required,
+    status Status required,
+    coverPhotoUrl String required
     date Instant required
 }
 
 entity Portfolio {
 	title String required maxlength(255),
     url String required,
-    image Boolean,
-    description TextBlob,
+    coverPhotoUrl String required
+    description TextBlob required,
     date Instant required
 }
 
-entity Contact {
+entity Message {
 	name String required,
     email String required,
     message TextBlob required,
@@ -30,4 +30,4 @@ relationship ManyToOne {
   Post{user} to User
 }
 
-paginate Contact, Portfolio with pagination
+paginate Post, Message, Portfolio with pagination

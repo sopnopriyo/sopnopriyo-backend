@@ -3,9 +3,7 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.SopnopriyoApp;
 
 import com.sopnopriyo.application.domain.Post;
-import com.sopnopriyo.application.repository.UserRepository;
-import com.sopnopriyo.application.service.PostService;
-import com.sopnopriyo.application.service.UserService;
+import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -17,11 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -54,17 +52,14 @@ public class PostResourceIntTest {
     private static final Status DEFAULT_STATUS = Status.DRAFT;
     private static final Status UPDATED_STATUS = Status.PUBLISHED;
 
+    private static final String DEFAULT_COVER_PHOTO_URL = "AAAAAAAAAA";
+    private static final String UPDATED_COVER_PHOTO_URL = "BBBBBBBBBB";
+
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-    private PostService postService;
-
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -82,11 +77,10 @@ public class PostResourceIntTest {
 
     private Post post;
 
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PostResource postResource = new PostResource(postService, userService);
+        final PostResource postResource = new PostResource(postRepository);
         this.restPostMockMvc = MockMvcBuilders.standaloneSetup(postResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -100,14 +94,13 @@ public class PostResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-	@WithMockUser
-    public Post createEntity(EntityManager em) {
+    public static Post createEntity(EntityManager em) {
         Post post = new Post()
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
             .status(DEFAULT_STATUS)
-			.date(DEFAULT_DATE)
-			.user(userRepository.findOneByLogin("user").get());
+            .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
+            .date(DEFAULT_DATE);
         return post;
     }
 
@@ -117,10 +110,9 @@ public class PostResourceIntTest {
     }
 
     @Test
-	@Transactional
-	@WithMockUser
+    @Transactional
     public void createPost() throws Exception {
-        int databaseSizeBeforeCreate = postService.findAll().size();
+        int databaseSizeBeforeCreate = postRepository.findAll().size();
 
         // Create the Post
         restPostMockMvc.perform(post("/api/posts")
@@ -129,20 +121,20 @@ public class PostResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Post in the database
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeCreate + 1);
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPost.getBody()).isEqualTo(DEFAULT_BODY);
         assertThat(testPost.getStatus()).isEqualTo(DEFAULT_STATUS);
+        assertThat(testPost.getCoverPhotoUrl()).isEqualTo(DEFAULT_COVER_PHOTO_URL);
         assertThat(testPost.getDate()).isEqualTo(DEFAULT_DATE);
     }
 
     @Test
-	@Transactional
-	@WithMockUser
+    @Transactional
     public void createPostWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = postService.findAll().size();
+        int databaseSizeBeforeCreate = postRepository.findAll().size();
 
         // Create the Post with an existing ID
         post.setId(1L);
@@ -154,14 +146,14 @@ public class PostResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Post in the database
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkTitleIsRequired() throws Exception {
-        int databaseSizeBeforeTest = postService.findAll().size();
+        int databaseSizeBeforeTest = postRepository.findAll().size();
         // set the field null
         post.setTitle(null);
 
@@ -172,14 +164,50 @@ public class PostResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(post)))
             .andExpect(status().isBadRequest());
 
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
+        assertThat(postList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkStatusIsRequired() throws Exception {
+        int databaseSizeBeforeTest = postRepository.findAll().size();
+        // set the field null
+        post.setStatus(null);
+
+        // Create the Post, which fails.
+
+        restPostMockMvc.perform(post("/api/posts")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(post)))
+            .andExpect(status().isBadRequest());
+
+        List<Post> postList = postRepository.findAll();
+        assertThat(postList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkCoverPhotoUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = postRepository.findAll().size();
+        // set the field null
+        post.setCoverPhotoUrl(null);
+
+        // Create the Post, which fails.
+
+        restPostMockMvc.perform(post("/api/posts")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(post)))
+            .andExpect(status().isBadRequest());
+
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = postService.findAll().size();
+        int databaseSizeBeforeTest = postRepository.findAll().size();
         // set the field null
         post.setDate(null);
 
@@ -190,16 +218,15 @@ public class PostResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(post)))
             .andExpect(status().isBadRequest());
 
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
-	@Transactional
-	@WithMockUser
+    @Transactional
     public void getAllPosts() throws Exception {
         // Initialize the database
-        postService.saveAndFlush(post);
+        postRepository.saveAndFlush(post);
 
         // Get all the postList
         restPostMockMvc.perform(get("/api/posts?sort=id,desc"))
@@ -209,15 +236,15 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].body").value(hasItem(DEFAULT_BODY.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-
-
+    
     @Test
     @Transactional
     public void getPost() throws Exception {
         // Initialize the database
-        postService.saveAndFlush(post);
+        postRepository.saveAndFlush(post);
 
         // Get the post
         restPostMockMvc.perform(get("/api/posts/{id}", post.getId()))
@@ -227,8 +254,10 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingPost() throws Exception {
@@ -239,21 +268,21 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
-    @WithMockUser
     public void updatePost() throws Exception {
         // Initialize the database
-        postService.saveAndFlush(post);
+        postRepository.saveAndFlush(post);
 
-        int databaseSizeBeforeUpdate = postService.findAll().size();
+        int databaseSizeBeforeUpdate = postRepository.findAll().size();
 
         // Update the post
-        Post updatedPost = postService.findById(post.getId()).get();
+        Post updatedPost = postRepository.findById(post.getId()).get();
         // Disconnect from session so that the updates on updatedPost are not directly saved in db
         em.detach(updatedPost);
         updatedPost
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
             .status(UPDATED_STATUS)
+            .coverPhotoUrl(UPDATED_COVER_PHOTO_URL)
             .date(UPDATED_DATE);
 
         restPostMockMvc.perform(put("/api/posts")
@@ -262,95 +291,41 @@ public class PostResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Post in the database
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeUpdate);
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPost.getBody()).isEqualTo(UPDATED_BODY);
         assertThat(testPost.getStatus()).isEqualTo(UPDATED_STATUS);
+        assertThat(testPost.getCoverPhotoUrl()).isEqualTo(UPDATED_COVER_PHOTO_URL);
         assertThat(testPost.getDate()).isEqualTo(UPDATED_DATE);
     }
 
     @Test
     @Transactional
-    public void updatePostWithoutAuth() throws Exception {
-        // Initialize the database
-        postService.saveAndFlush(post);
-
-        int databaseSizeBeforeUpdate = postService.findAll().size();
-
-        // Update the post
-        Post updatedPost = postService.findById(post.getId()).get();
-        // Disconnect from session so that the updates on updatedPost are not directly saved in db
-        em.detach(updatedPost);
-        updatedPost
-            .title(UPDATED_TITLE)
-            .body(UPDATED_BODY)
-            .status(UPDATED_STATUS)
-            .date(UPDATED_DATE);
-
-        restPostMockMvc.perform(put("/api/posts")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPost)))
-            .andExpect(status().isNotFound());
-
-        assertThat(databaseSizeBeforeUpdate).isEqualTo(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @Transactional
     public void updateNonExistingPost() throws Exception {
-        int databaseSizeBeforeUpdate = postService.findAll().size();
+        int databaseSizeBeforeUpdate = postRepository.findAll().size();
 
         // Create the Post
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPostMockMvc.perform(put("/api/posts")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(post)))
             .andExpect(status().isBadRequest());
 
         // Validate the Post in the database
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeUpdate);
     }
 
-    @WithMockUser
     @Test
-    @Transactional
-    public void updatePostByAdmin() throws Exception {
-        // Initialize the database
-        postService.saveAndFlush(post);
-
-        int databaseSizeBeforeUpdate = postService.findAll().size();
-
-        // Update the post
-        Post updatedPost = postService.findById(post.getId()).get();
-        // Disconnect from session so that the updates on updatedPost are not directly saved in db
-        em.detach(updatedPost);
-        updatedPost
-            .title(UPDATED_TITLE)
-            .body(UPDATED_BODY)
-            .status(UPDATED_STATUS)
-            .date(UPDATED_DATE)
-            .user(userRepository.findOneByLogin("admin").get());
-
-        restPostMockMvc.perform(put("/api/posts")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPost)))
-            .andExpect(status().isOk());
-
-        assertThat(databaseSizeBeforeUpdate).isEqualTo(databaseSizeBeforeUpdate);
-    }
-
-    @Test
-    @WithMockUser
     @Transactional
     public void deletePost() throws Exception {
         // Initialize the database
-        postService.saveAndFlush(post);
+        postRepository.saveAndFlush(post);
 
-        int databaseSizeBeforeDelete = postService.findAll().size();
+        int databaseSizeBeforeDelete = postRepository.findAll().size();
 
         // Get the post
         restPostMockMvc.perform(delete("/api/posts/{id}", post.getId())
@@ -358,7 +333,7 @@ public class PostResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeDelete - 1);
     }
 

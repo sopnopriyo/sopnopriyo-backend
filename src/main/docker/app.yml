@@ -3,13 +3,13 @@ services:
     sopnopriyo-app:
         image: sopnopriyo
         environment:
-            # - _JAVA_OPTIONS=-Xmx512m -Xms256m
+            - _JAVA_OPTIONS=-Xmx512m -Xms256m
             - SPRING_PROFILES_ACTIVE=prod,swagger
-            - SPRING_DATASOURCE_URL=jdbc:postgresql://sopnopriyo-postgresql:5432/sopnopriyo
+            - SPRING_DATASOURCE_URL=jdbc:mysql://sopnopriyo-mysql:3306/sopnopriyo?useUnicode=true&characterEncoding=utf8&useSSL=false
             - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
         ports:
             - 8080:8080
-    sopnopriyo-postgresql:
+    sopnopriyo-mysql:
         extends:
-            file: postgresql.yml
-            service: sopnopriyo-postgresql
+            file: mysql.yml
+            service: sopnopriyo-mysql

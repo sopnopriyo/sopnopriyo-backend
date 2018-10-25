@@ -24,8 +24,7 @@ public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -35,16 +34,20 @@ public class Post implements Serializable {
 
     
     @Lob
-    @NotNull
-    @Column(name = "jhi_body", nullable = false)
+    @Column(name = "sp_body", nullable = false)
     private String body;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private Status status;
 
     @NotNull
-    @Column(name = "jhi_date", nullable = false)
+    @Column(name = "cover_photo_url", nullable = false)
+    private String coverPhotoUrl;
+
+    @NotNull
+    @Column(name = "sp_date", nullable = false)
     private Instant date;
 
     @ManyToOne
@@ -97,6 +100,19 @@ public class Post implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getCoverPhotoUrl() {
+        return coverPhotoUrl;
+    }
+
+    public Post coverPhotoUrl(String coverPhotoUrl) {
+        this.coverPhotoUrl = coverPhotoUrl;
+        return this;
+    }
+
+    public void setCoverPhotoUrl(String coverPhotoUrl) {
+        this.coverPhotoUrl = coverPhotoUrl;
     }
 
     public Instant getDate() {
@@ -153,6 +169,7 @@ public class Post implements Serializable {
             ", title='" + getTitle() + "'" +
             ", body='" + getBody() + "'" +
             ", status='" + getStatus() + "'" +
+            ", coverPhotoUrl='" + getCoverPhotoUrl() + "'" +
             ", date='" + getDate() + "'" +
             "}";
     }

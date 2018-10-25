@@ -3,7 +3,7 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.SopnopriyoApp;
 
 import com.sopnopriyo.application.domain.Portfolio;
-import com.sopnopriyo.application.service.PortfolioService;
+import com.sopnopriyo.application.repository.PortfolioRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -47,8 +48,8 @@ public class PortfolioResourceIntTest {
     private static final String DEFAULT_URL = "AAAAAAAAAA";
     private static final String UPDATED_URL = "BBBBBBBBBB";
 
-    private static final Boolean DEFAULT_IMAGE = false;
-    private static final Boolean UPDATED_IMAGE = true;
+    private static final String DEFAULT_COVER_PHOTO_URL = "AAAAAAAAAA";
+    private static final String UPDATED_COVER_PHOTO_URL = "BBBBBBBBBB";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -57,8 +58,7 @@ public class PortfolioResourceIntTest {
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
-    private PortfolioService portfolioService;
-
+    private PortfolioRepository portfolioRepository;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -79,7 +79,7 @@ public class PortfolioResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PortfolioResource portfolioResource = new PortfolioResource(portfolioService);
+        final PortfolioResource portfolioResource = new PortfolioResource(portfolioRepository);
         this.restPortfolioMockMvc = MockMvcBuilders.standaloneSetup(portfolioResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -97,7 +97,7 @@ public class PortfolioResourceIntTest {
         Portfolio portfolio = new Portfolio()
             .title(DEFAULT_TITLE)
             .url(DEFAULT_URL)
-            .image(DEFAULT_IMAGE)
+            .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
             .description(DEFAULT_DESCRIPTION)
             .date(DEFAULT_DATE);
         return portfolio;
@@ -111,7 +111,7 @@ public class PortfolioResourceIntTest {
     @Test
     @Transactional
     public void createPortfolio() throws Exception {
-        int databaseSizeBeforeCreate = portfolioService.findAll().size();
+        int databaseSizeBeforeCreate = portfolioRepository.findAll().size();
 
         // Create the Portfolio
         restPortfolioMockMvc.perform(post("/api/portfolios")
@@ -120,12 +120,12 @@ public class PortfolioResourceIntTest {
             .andExpect(status().isCreated());
 
         // Validate the Portfolio in the database
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeCreate + 1);
         Portfolio testPortfolio = portfolioList.get(portfolioList.size() - 1);
         assertThat(testPortfolio.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPortfolio.getUrl()).isEqualTo(DEFAULT_URL);
-        assertThat(testPortfolio.isImage()).isEqualTo(DEFAULT_IMAGE);
+        assertThat(testPortfolio.getCoverPhotoUrl()).isEqualTo(DEFAULT_COVER_PHOTO_URL);
         assertThat(testPortfolio.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testPortfolio.getDate()).isEqualTo(DEFAULT_DATE);
     }
@@ -133,7 +133,7 @@ public class PortfolioResourceIntTest {
     @Test
     @Transactional
     public void createPortfolioWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = portfolioService.findAll().size();
+        int databaseSizeBeforeCreate = portfolioRepository.findAll().size();
 
         // Create the Portfolio with an existing ID
         portfolio.setId(1L);
@@ -145,14 +145,14 @@ public class PortfolioResourceIntTest {
             .andExpect(status().isBadRequest());
 
         // Validate the Portfolio in the database
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     public void checkTitleIsRequired() throws Exception {
-        int databaseSizeBeforeTest = portfolioService.findAll().size();
+        int databaseSizeBeforeTest = portfolioRepository.findAll().size();
         // set the field null
         portfolio.setTitle(null);
 
@@ -163,14 +163,14 @@ public class PortfolioResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(portfolio)))
             .andExpect(status().isBadRequest());
 
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkUrlIsRequired() throws Exception {
-        int databaseSizeBeforeTest = portfolioService.findAll().size();
+        int databaseSizeBeforeTest = portfolioRepository.findAll().size();
         // set the field null
         portfolio.setUrl(null);
 
@@ -181,14 +181,32 @@ public class PortfolioResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(portfolio)))
             .andExpect(status().isBadRequest());
 
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
+        assertThat(portfolioList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkCoverPhotoUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = portfolioRepository.findAll().size();
+        // set the field null
+        portfolio.setCoverPhotoUrl(null);
+
+        // Create the Portfolio, which fails.
+
+        restPortfolioMockMvc.perform(post("/api/portfolios")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(portfolio)))
+            .andExpect(status().isBadRequest());
+
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
     @Transactional
     public void checkDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = portfolioService.findAll().size();
+        int databaseSizeBeforeTest = portfolioRepository.findAll().size();
         // set the field null
         portfolio.setDate(null);
 
@@ -199,7 +217,7 @@ public class PortfolioResourceIntTest {
             .content(TestUtil.convertObjectToJsonBytes(portfolio)))
             .andExpect(status().isBadRequest());
 
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeTest);
     }
 
@@ -207,7 +225,7 @@ public class PortfolioResourceIntTest {
     @Transactional
     public void getAllPortfolios() throws Exception {
         // Initialize the database
-        portfolioService.saveAndFlush(portfolio);
+        portfolioRepository.saveAndFlush(portfolio);
 
         // Get all the portfolioList
         restPortfolioMockMvc.perform(get("/api/portfolios?sort=id,desc"))
@@ -216,17 +234,16 @@ public class PortfolioResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(portfolio.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
-            .andExpect(jsonPath("$.[*].image").value(hasItem(DEFAULT_IMAGE.booleanValue())))
+            .andExpect(jsonPath("$.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-
-
+    
     @Test
     @Transactional
     public void getPortfolio() throws Exception {
         // Initialize the database
-        portfolioService.saveAndFlush(portfolio);
+        portfolioRepository.saveAndFlush(portfolio);
 
         // Get the portfolio
         restPortfolioMockMvc.perform(get("/api/portfolios/{id}", portfolio.getId()))
@@ -235,10 +252,11 @@ public class PortfolioResourceIntTest {
             .andExpect(jsonPath("$.id").value(portfolio.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.url").value(DEFAULT_URL.toString()))
-            .andExpect(jsonPath("$.image").value(DEFAULT_IMAGE.booleanValue()))
+            .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingPortfolio() throws Exception {
@@ -251,18 +269,18 @@ public class PortfolioResourceIntTest {
     @Transactional
     public void updatePortfolio() throws Exception {
         // Initialize the database
-        portfolioService.saveAndFlush(portfolio);
+        portfolioRepository.saveAndFlush(portfolio);
 
-        int databaseSizeBeforeUpdate = portfolioService.findAll().size();
+        int databaseSizeBeforeUpdate = portfolioRepository.findAll().size();
 
         // Update the portfolio
-        Portfolio updatedPortfolio = portfolioService.findById(portfolio.getId()).get();
+        Portfolio updatedPortfolio = portfolioRepository.findById(portfolio.getId()).get();
         // Disconnect from session so that the updates on updatedPortfolio are not directly saved in db
         em.detach(updatedPortfolio);
         updatedPortfolio
             .title(UPDATED_TITLE)
             .url(UPDATED_URL)
-            .image(UPDATED_IMAGE)
+            .coverPhotoUrl(UPDATED_COVER_PHOTO_URL)
             .description(UPDATED_DESCRIPTION)
             .date(UPDATED_DATE);
 
@@ -272,12 +290,12 @@ public class PortfolioResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the Portfolio in the database
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeUpdate);
         Portfolio testPortfolio = portfolioList.get(portfolioList.size() - 1);
         assertThat(testPortfolio.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPortfolio.getUrl()).isEqualTo(UPDATED_URL);
-        assertThat(testPortfolio.isImage()).isEqualTo(UPDATED_IMAGE);
+        assertThat(testPortfolio.getCoverPhotoUrl()).isEqualTo(UPDATED_COVER_PHOTO_URL);
         assertThat(testPortfolio.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testPortfolio.getDate()).isEqualTo(UPDATED_DATE);
     }
@@ -285,18 +303,18 @@ public class PortfolioResourceIntTest {
     @Test
     @Transactional
     public void updateNonExistingPortfolio() throws Exception {
-        int databaseSizeBeforeUpdate = portfolioService.findAll().size();
+        int databaseSizeBeforeUpdate = portfolioRepository.findAll().size();
 
         // Create the Portfolio
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPortfolioMockMvc.perform(put("/api/portfolios")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(portfolio)))
             .andExpect(status().isBadRequest());
 
         // Validate the Portfolio in the database
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeUpdate);
     }
 
@@ -304,9 +322,9 @@ public class PortfolioResourceIntTest {
     @Transactional
     public void deletePortfolio() throws Exception {
         // Initialize the database
-        portfolioService.saveAndFlush(portfolio);
+        portfolioRepository.saveAndFlush(portfolio);
 
-        int databaseSizeBeforeDelete = portfolioService.findAll().size();
+        int databaseSizeBeforeDelete = portfolioRepository.findAll().size();
 
         // Get the portfolio
         restPortfolioMockMvc.perform(delete("/api/portfolios/{id}", portfolio.getId())
@@ -314,7 +332,7 @@ public class PortfolioResourceIntTest {
             .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Portfolio> portfolioList = portfolioService.findAll();
+        List<Portfolio> portfolioList = portfolioRepository.findAll();
         assertThat(portfolioList).hasSize(databaseSizeBeforeDelete - 1);
     }
 

@@ -21,8 +21,7 @@ public class Portfolio implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -34,15 +33,17 @@ public class Portfolio implements Serializable {
     @Column(name = "url", nullable = false)
     private String url;
 
-    @Column(name = "image")
-    private Boolean image;
+    @NotNull
+    @Column(name = "cover_photo_url", nullable = false)
+    private String coverPhotoUrl;
 
+    
     @Lob
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @NotNull
-    @Column(name = "jhi_date", nullable = false)
+    @Column(name = "sp_date", nullable = false)
     private Instant date;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
@@ -80,17 +81,17 @@ public class Portfolio implements Serializable {
         this.url = url;
     }
 
-    public Boolean isImage() {
-        return image;
+    public String getCoverPhotoUrl() {
+        return coverPhotoUrl;
     }
 
-    public Portfolio image(Boolean image) {
-        this.image = image;
+    public Portfolio coverPhotoUrl(String coverPhotoUrl) {
+        this.coverPhotoUrl = coverPhotoUrl;
         return this;
     }
 
-    public void setImage(Boolean image) {
-        this.image = image;
+    public void setCoverPhotoUrl(String coverPhotoUrl) {
+        this.coverPhotoUrl = coverPhotoUrl;
     }
 
     public String getDescription() {
@@ -146,7 +147,7 @@ public class Portfolio implements Serializable {
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", url='" + getUrl() + "'" +
-            ", image='" + isImage() + "'" +
+            ", coverPhotoUrl='" + getCoverPhotoUrl() + "'" +
             ", description='" + getDescription() + "'" +
             ", date='" + getDate() + "'" +
             "}";

@@ -6,13 +6,13 @@
     <!--
         Added the constraints for entity Post.
     -->
-    <changeSet id="20180729031617-2" author="jhipster">
+    <changeSet id="20181021015301-2" author="jhipster">
         
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="post"
                                  constraintName="fk_post_user_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="jhi_user"/>
+                                 referencedTableName="sp_user"/>
 
     </changeSet>
 </databaseChangeLog>
