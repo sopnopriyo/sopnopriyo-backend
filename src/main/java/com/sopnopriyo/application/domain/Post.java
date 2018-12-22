@@ -1,6 +1,5 @@
 package com.sopnopriyo.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -50,9 +49,8 @@ public class Post implements Serializable {
     @Column(name = "sp_date", nullable = false)
     private Instant date;
 
-    @ManyToOne
-    @JsonIgnoreProperties("")
-    private User user;
+    @Column(name="user_id", nullable = false)
+    private long userId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -128,17 +126,17 @@ public class Post implements Serializable {
         this.date = date;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public Post user(User user) {
-        this.user = user;
+    public Post userId(long userId) {
+        this.userId = userId;
         return this;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
@@ -170,6 +168,7 @@ public class Post implements Serializable {
             ", body='" + getBody() + "'" +
             ", status='" + getStatus() + "'" +
             ", coverPhotoUrl='" + getCoverPhotoUrl() + "'" +
+            ", userId='" + getUserId() + "'" +
             ", date='" + getDate() + "'" +
             "}";
     }

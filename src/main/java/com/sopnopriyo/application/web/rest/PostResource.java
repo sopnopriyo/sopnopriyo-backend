@@ -1,9 +1,15 @@
 package com.sopnopriyo.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.sopnopriyo.application.domain.Authority;
 import com.sopnopriyo.application.domain.Post;
+import com.sopnopriyo.application.domain.User;
 import com.sopnopriyo.application.repository.PostRepository;
+import com.sopnopriyo.application.repository.UserRepository;
+import com.sopnopriyo.application.security.AuthoritiesConstants;
+import com.sopnopriyo.application.security.SecurityUtils;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
+import com.sopnopriyo.application.web.rest.errors.ForbiddenException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -14,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,8 +43,11 @@ public class PostResource {
 
     private PostRepository postRepository;
 
-    public PostResource(PostRepository postRepository) {
+    private UserRepository userRepository;
+
+    public PostResource(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -54,6 +64,12 @@ public class PostResource {
         if (post.getId() != null) {
             throw new BadRequestAlertException("A new post cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
+        Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
+
+        post.setUserId(loggedInUser.get().getId());
+
         Post result = postRepository.save(post);
         return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
@@ -76,6 +92,16 @@ public class PostResource {
         if (post.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
+        Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
+
+        Optional<Post> existingPost = postRepository.findById(post.getId());
+
+        if (existingPost.get().getUserId() !=  loggedInUser.get().getId() && !isAdmin(loggedInUser.get())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         Post result = postRepository.save(post);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
@@ -92,7 +118,18 @@ public class PostResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
-        Page<Post> page = postRepository.findAll(pageable);
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
+        Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
+
+        Page<Post> page;
+
+        if (isAdmin(loggedInUser.get())) {
+            page = postRepository.findAll(pageable);
+        } else {
+            page = postRepository.findByUserId(loggedInUser.get().getId(), pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
@@ -108,6 +145,14 @@ public class PostResource {
     public ResponseEntity<Post> getPost(@PathVariable Long id) {
         log.debug("REST request to get Post : {}", id);
         Optional<Post> post = postRepository.findById(id);
+
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
+        Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
+
+        if ((post.get().getUserId() != loggedInUser.get().getId()) && !isAdmin(loggedInUser.get())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         return ResponseUtil.wrapOrNotFound(post);
     }
 
@@ -122,7 +167,28 @@ public class PostResource {
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         log.debug("REST request to delete Post : {}", id);
 
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
+        Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
+
+        Post existingPost = postRepository.getOne(id);
+
+        if (existingPost.getUserId() !=  loggedInUser.get().getId() && !isAdmin(loggedInUser.get())) {
+            throw new ForbiddenException("Forbidden");
+        }
+
         postRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
+
+    /**
+     * Check if the given user has admin privilege
+     * @param user
+     * @return
+     */
+    private boolean isAdmin(User user) {
+        Authority authority = new Authority();
+        authority.setName(AuthoritiesConstants.ADMIN);
+
+        return user.getAuthorities().contains(authority);
     }
 }

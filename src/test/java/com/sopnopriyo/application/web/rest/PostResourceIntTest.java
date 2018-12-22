@@ -4,6 +4,7 @@ import com.sopnopriyo.application.SopnopriyoApp;
 
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.repository.PostRepository;
+import com.sopnopriyo.application.repository.UserRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
@@ -15,11 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -62,6 +63,9 @@ public class PostResourceIntTest {
     private PostRepository postRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
@@ -80,7 +84,7 @@ public class PostResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final PostResource postResource = new PostResource(postRepository);
+        final PostResource postResource = new PostResource(postRepository, userRepository);
         this.restPostMockMvc = MockMvcBuilders.standaloneSetup(postResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -94,12 +98,13 @@ public class PostResourceIntTest {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Post createEntity(EntityManager em) {
+    public Post createEntity(EntityManager em) {
         Post post = new Post()
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
             .status(DEFAULT_STATUS)
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
+            .userId(userRepository.findOneByLogin("user").get().getId())
             .date(DEFAULT_DATE);
         return post;
     }
@@ -111,6 +116,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void createPost() throws Exception {
         int databaseSizeBeforeCreate = postRepository.findAll().size();
 
@@ -133,6 +139,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void createPostWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = postRepository.findAll().size();
 
@@ -152,6 +159,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void checkTitleIsRequired() throws Exception {
         int databaseSizeBeforeTest = postRepository.findAll().size();
         // set the field null
@@ -170,6 +178,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void checkStatusIsRequired() throws Exception {
         int databaseSizeBeforeTest = postRepository.findAll().size();
         // set the field null
@@ -188,6 +197,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void checkCoverPhotoUrlIsRequired() throws Exception {
         int databaseSizeBeforeTest = postRepository.findAll().size();
         // set the field null
@@ -206,6 +216,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void checkDateIsRequired() throws Exception {
         int databaseSizeBeforeTest = postRepository.findAll().size();
         // set the field null
@@ -224,6 +235,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void getAllPosts() throws Exception {
         // Initialize the database
         postRepository.saveAndFlush(post);
@@ -242,6 +254,7 @@ public class PostResourceIntTest {
     
     @Test
     @Transactional
+    @WithMockUser
     public void getPost() throws Exception {
         // Initialize the database
         postRepository.saveAndFlush(post);
@@ -260,6 +273,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void getNonExistingPost() throws Exception {
         // Get the post
         restPostMockMvc.perform(get("/api/posts/{id}", Long.MAX_VALUE))
@@ -268,6 +282,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void updatePost() throws Exception {
         // Initialize the database
         postRepository.saveAndFlush(post);
@@ -303,6 +318,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void updateNonExistingPost() throws Exception {
         int databaseSizeBeforeUpdate = postRepository.findAll().size();
 
@@ -321,6 +337,7 @@ public class PostResourceIntTest {
 
     @Test
     @Transactional
+    @WithMockUser
     public void deletePost() throws Exception {
         // Initialize the database
         postRepository.saveAndFlush(post);
