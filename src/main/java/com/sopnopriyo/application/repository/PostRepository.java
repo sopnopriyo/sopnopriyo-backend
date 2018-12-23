@@ -1,6 +1,7 @@
 package com.sopnopriyo.application.repository;
 
 import com.sopnopriyo.application.domain.Post;
+import com.sopnopriyo.application.domain.enumeration.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -14,4 +15,6 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByUserId(Long id, Pageable pageable);
+
+    Page<Post> findByStatus(Status status, Pageable pageable);
 }

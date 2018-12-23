@@ -2,6 +2,7 @@ package com.sopnopriyo.application.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
+import com.sopnopriyo.application.domain.enumeration.Status;
 import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -44,7 +45,7 @@ public class BlogResource {
     @Timed
     public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of blog posts - public");
-        Page<Post> page = postRepository.findAll(pageable);
+        Page<Post> page = postRepository.findByStatus(Status.PUBLISHED, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/blogs");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
