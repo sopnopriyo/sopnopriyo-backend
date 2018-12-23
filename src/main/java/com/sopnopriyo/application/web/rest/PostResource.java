@@ -98,8 +98,11 @@ public class PostResource {
 
         Optional<Post> existingPost = postRepository.findById(post.getId());
 
-        if (existingPost.get().getUserId() !=  loggedInUser.get().getId() && !isAdmin(loggedInUser.get())) {
-            throw new ForbiddenException("Forbidden");
+        if (existingPost.isPresent()) {
+            if (existingPost.get().getUserId() != loggedInUser.get().getId() && !isAdmin(loggedInUser.get())) {
+                throw new ForbiddenException("Forbidden");
+            }
+            post.setUserId(existingPost.get().getUserId());
         }
 
         Post result = postRepository.save(post);
@@ -144,13 +147,15 @@ public class PostResource {
     @Timed
     public ResponseEntity<Post> getPost(@PathVariable Long id) {
         log.debug("REST request to get Post : {}", id);
-        Optional<Post> post = postRepository.findById(id);
-
         String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
         Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
 
-        if ((post.get().getUserId() != loggedInUser.get().getId()) && !isAdmin(loggedInUser.get())) {
-            throw new ForbiddenException("Forbidden");
+        Optional<Post> post = postRepository.findById(id);
+
+        if (post.isPresent()) {
+            if ((post.get().getUserId() != loggedInUser.get().getId()) && !isAdmin(loggedInUser.get())) {
+                throw new ForbiddenException("Forbidden");
+            }
         }
 
         return ResponseUtil.wrapOrNotFound(post);
@@ -170,10 +175,12 @@ public class PostResource {
         String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
         Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
 
-        Post existingPost = postRepository.getOne(id);
+        Optional<Post> existingPost = postRepository.findById(id);
 
-        if (existingPost.getUserId() !=  loggedInUser.get().getId() && !isAdmin(loggedInUser.get())) {
-            throw new ForbiddenException("Forbidden");
+        if (existingPost.isPresent()) {
+            if (existingPost.get().getUserId() != loggedInUser.get().getId() && !isAdmin(loggedInUser.get())) {
+                throw new ForbiddenException("Forbidden");
+            }
         }
 
         postRepository.deleteById(id);
