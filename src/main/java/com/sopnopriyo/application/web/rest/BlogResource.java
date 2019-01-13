@@ -51,16 +51,16 @@ public class BlogResource {
     }
 
     /**
-     * GET  /blogs/:id : get the "id" post.
+     * GET  /blogs/:slug : get the "slug" post.
      *
-     * @param id the id of the post to retrieve
+     * @param slug the title slug of the post to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the post, or with status 404 (Not Found)
      */
-    @GetMapping("/blogs/{id}")
+    @GetMapping("/blogs/{slug}")
     @Timed
-    public ResponseEntity<Post> getPost(@PathVariable Long id) {
-        log.debug("REST request to get blog post : {} - public", id);
-        Optional<Post> post = postRepository.findById(id);
+    public ResponseEntity<Post> getPost(@PathVariable String slug) {
+        log.debug("REST request to get blog post : {} - public", slug);
+        Optional<Post> post = postRepository.findBySlug(slug);
         return ResponseUtil.wrapOrNotFound(post);
     }
 

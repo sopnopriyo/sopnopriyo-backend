@@ -56,6 +56,9 @@ public class PostResourceIntTest {
     private static final String DEFAULT_COVER_PHOTO_URL = "AAAAAAAAAA";
     private static final String UPDATED_COVER_PHOTO_URL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SLUG = "AAAAAAAAAA";
+    private static final String UPDATED_SLUG = "BBBBBBBBBB";
+
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -104,6 +107,7 @@ public class PostResourceIntTest {
             .body(DEFAULT_BODY)
             .status(DEFAULT_STATUS)
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
+            .slug(DEFAULT_SLUG)
             .userId(userRepository.findOneByLogin("user").get().getId())
             .date(DEFAULT_DATE);
         return post;
@@ -134,6 +138,7 @@ public class PostResourceIntTest {
         assertThat(testPost.getBody()).isEqualTo(DEFAULT_BODY);
         assertThat(testPost.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testPost.getCoverPhotoUrl()).isEqualTo(DEFAULT_COVER_PHOTO_URL);
+        assertThat(testPost.getSlug()).isEqualTo(DEFAULT_SLUG);
         assertThat(testPost.getDate()).isEqualTo(DEFAULT_DATE);
     }
 
@@ -249,6 +254,7 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.[*].body").value(hasItem(DEFAULT_BODY.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
     
@@ -268,6 +274,7 @@ public class PostResourceIntTest {
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
 
@@ -298,6 +305,7 @@ public class PostResourceIntTest {
             .body(UPDATED_BODY)
             .status(UPDATED_STATUS)
             .coverPhotoUrl(UPDATED_COVER_PHOTO_URL)
+            .slug(UPDATED_SLUG)
             .date(UPDATED_DATE);
 
         restPostMockMvc.perform(put("/api/posts")
@@ -313,6 +321,7 @@ public class PostResourceIntTest {
         assertThat(testPost.getBody()).isEqualTo(UPDATED_BODY);
         assertThat(testPost.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testPost.getCoverPhotoUrl()).isEqualTo(UPDATED_COVER_PHOTO_URL);
+        assertThat(testPost.getSlug()).isEqualTo(UPDATED_SLUG);
         assertThat(testPost.getDate()).isEqualTo(UPDATED_DATE);
     }
 

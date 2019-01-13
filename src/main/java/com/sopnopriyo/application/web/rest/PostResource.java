@@ -65,6 +65,8 @@ public class PostResource {
             throw new BadRequestAlertException("A new post cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
+        //ToDO Handle duplicate slug name exception
+
         String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
         Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);
 
@@ -92,6 +94,8 @@ public class PostResource {
         if (post.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        //ToDO Handle duplicate slug name exception
 
         String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
         Optional<User> loggedInUser = userRepository.findOneByLogin(currentUserLogin);

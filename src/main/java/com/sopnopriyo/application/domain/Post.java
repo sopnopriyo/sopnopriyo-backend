@@ -46,6 +46,10 @@ public class Post implements Serializable {
     private String coverPhotoUrl;
 
     @NotNull
+    @Column(name = "slug")
+    private String slug;
+
+    @NotNull
     @Column(name = "sp_date", nullable = false)
     private Instant date;
 
@@ -113,6 +117,19 @@ public class Post implements Serializable {
         this.coverPhotoUrl = coverPhotoUrl;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public Post slug(String slug) {
+        this.slug =  slug;
+        return this;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public Instant getDate() {
         return date;
     }
@@ -168,6 +185,7 @@ public class Post implements Serializable {
             ", body='" + getBody() + "'" +
             ", status='" + getStatus() + "'" +
             ", coverPhotoUrl='" + getCoverPhotoUrl() + "'" +
+            ", slug='" + getSlug() + "'" +
             ", userId='" + getUserId() + "'" +
             ", date='" + getDate() + "'" +
             "}";

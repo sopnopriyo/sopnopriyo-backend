@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * Spring Data  repository for the Post entity.
  */
@@ -17,4 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByUserId(Long id, Pageable pageable);
 
     Page<Post> findByStatus(Status status, Pageable pageable);
+
+    Optional<Post> findBySlug(String slug);
 }

@@ -48,6 +48,8 @@ public class BlogResourceIntTest {
 
     private static final String DEFAULT_COVER_PHOTO_URL = "DDDDDDDDDDDDD";
 
+    private static final String DEFAULT_SLUG = "AAAAAAAAAA";
+
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
 
     @Autowired
@@ -95,6 +97,7 @@ public class BlogResourceIntTest {
             .body(DEFAULT_BODY)
             .status(DEFAULT_STATUS)
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
+            .slug(DEFAULT_SLUG)
             .userId(userRepository.findOneByLogin("user").get().getId())
             .date(DEFAULT_DATE);
         return post;
@@ -120,6 +123,7 @@ public class BlogResourceIntTest {
             .andExpect(jsonPath("$.[*].body").value(hasItem(DEFAULT_BODY.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
             .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
 
@@ -130,7 +134,7 @@ public class BlogResourceIntTest {
         postRepository.saveAndFlush(post);
 
         // Get the post
-        restPostMockMvc.perform(get("/api/blogs/{id}", post.getId()))
+        restPostMockMvc.perform(get("/api/blogs/{slug}", post.getSlug()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(post.getId().intValue()))
@@ -138,6 +142,7 @@ public class BlogResourceIntTest {
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
 

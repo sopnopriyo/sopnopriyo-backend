@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="shahin" id="20190113015303-1">
+        <addColumn catalogName="sopnopriyo"
+                   tableName="post">
+            <column name="slug" type="varchar(255)">
+                <constraints unique="true" uniqueConstraintName="ux_post_slug"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20190113015303-2" author="shahin">
+        <sql>UPDATE post SET post.slug = REPLACE(post.title, ' ', '-')</sql>
+    </changeSet>
+</databaseChangeLog>
