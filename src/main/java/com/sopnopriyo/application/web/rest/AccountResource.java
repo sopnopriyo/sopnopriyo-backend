@@ -13,6 +13,7 @@ import com.sopnopriyo.application.web.rest.errors.*;
 import com.sopnopriyo.application.web.rest.vm.KeyAndPasswordVM;
 import com.sopnopriyo.application.web.rest.vm.ManagedUserVM;
 
+import com.sopnopriyo.application.web.rest.vm.PasswordResetVM;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -148,14 +149,14 @@ public class AccountResource {
     /**
      * POST   /account/reset-password/init : Send an email to reset the password of the user
      *
-     * @param mail the mail of the user
+     * @param passwordResetVM an object containing the mail of the user
      * @throws EmailNotFoundException 400 (Bad Request) if the email address is not registered
      */
     @PostMapping(path = "/account/reset-password/init")
     @Timed
-    public void requestPasswordReset(@RequestBody String mail) {
+    public void requestPasswordReset(@RequestBody PasswordResetVM passwordResetVM) {
        mailService.sendPasswordResetMail(
-           userService.requestPasswordReset(mail)
+           userService.requestPasswordReset(passwordResetVM.getMail())
                .orElseThrow(EmailNotFoundException::new)
        );
     }

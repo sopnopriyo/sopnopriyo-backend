@@ -14,6 +14,7 @@ import com.sopnopriyo.application.service.dto.UserDTO;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 import com.sopnopriyo.application.web.rest.vm.KeyAndPasswordVM;
 import com.sopnopriyo.application.web.rest.vm.ManagedUserVM;
+import com.sopnopriyo.application.web.rest.vm.PasswordResetVM;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.junit.Before;
@@ -716,8 +717,13 @@ public class AccountResourceIntTest {
         user.setEmail("password-reset@example.com");
         userRepository.saveAndFlush(user);
 
+
+        PasswordResetVM passwordResetVM = new PasswordResetVM();
+        passwordResetVM.setMail("password-reset@example.com");
+
         restMvc.perform(post("/api/account/reset-password/init")
-            .content("password-reset@example.com"))
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(passwordResetVM)))
             .andExpect(status().isOk());
     }
 
@@ -731,16 +737,25 @@ public class AccountResourceIntTest {
         user.setEmail("password-reset@example.com");
         userRepository.saveAndFlush(user);
 
+        PasswordResetVM passwordResetVM = new PasswordResetVM();
+        passwordResetVM.setMail("password-reset@EXAMPLE.COM");
+
         restMvc.perform(post("/api/account/reset-password/init")
-            .content("password-reset@EXAMPLE.COM"))
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(passwordResetVM)))
             .andExpect(status().isOk());
     }
 
     @Test
     public void testRequestPasswordResetWrongEmail() throws Exception {
+
+        PasswordResetVM passwordResetVM = new PasswordResetVM();
+        passwordResetVM.setMail("password-reset-wrong-email@example.com");
+
         restMvc.perform(
             post("/api/account/reset-password/init")
-                .content("password-reset-wrong-email@example.com"))
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(passwordResetVM)))
             .andExpect(status().isBadRequest());
     }
 
