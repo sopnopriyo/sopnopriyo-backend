@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sopnopriyo/sopnopriyo.svg?branch=master)](https://travis-ci.org/sopnopriyo/sopnopriyo)
+[![Build Status](https://travis-ci.org/sopnopriyo/sopnopriyo-backend.svg?branch=master)](https://travis-ci.org/sopnopriyo/sopnopriyo-backend)
 # sopnopriyo
 This is the backend of my personal website. Developed using Java, Spring Boot, MySql and Hibernate
 
