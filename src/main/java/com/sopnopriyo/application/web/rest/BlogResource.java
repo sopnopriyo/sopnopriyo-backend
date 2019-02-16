@@ -43,11 +43,11 @@ public class BlogResource {
      */
     @GetMapping("/blogs")
     @Timed
-    public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of blog posts - public");
         Page<Post> page = postRepository.findByStatus(Status.PUBLISHED, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/blogs");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**

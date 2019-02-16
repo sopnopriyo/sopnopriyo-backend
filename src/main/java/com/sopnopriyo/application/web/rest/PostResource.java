@@ -123,7 +123,7 @@ public class PostResource {
      */
     @GetMapping("/posts")
     @Timed
-    public ResponseEntity<List<Post>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable) {
         log.debug("REST request to get a page of Posts");
 
         String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
@@ -138,7 +138,7 @@ public class PostResource {
         }
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**
