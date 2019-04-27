@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
@@ -73,7 +72,7 @@ public class StockResourceIntTest {
 	@Autowired
 	private EntityManager em;
 
-	private MockMvc restMessageMockMvc;
+	private MockMvc restStockMockMvc;
 
 	private Stock stock;
 
@@ -81,7 +80,7 @@ public class StockResourceIntTest {
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final StockResource stockResource = new StockResource(stockRepository);
-		this.restMessageMockMvc = MockMvcBuilders.standaloneSetup(stockResource)
+		this.restStockMockMvc = MockMvcBuilders.standaloneSetup(stockResource)
 				.setCustomArgumentResolvers(pageableArgumentResolver)
 				.setControllerAdvice(exceptionTranslator)
 				.setConversionService(createFormattingConversionService())
@@ -114,8 +113,8 @@ public class StockResourceIntTest {
 	public void createStock() throws Exception {
 		int databaseSizeBeforeCreate = stockRepository.findAll().size();
 
-		// Create the Message
-		restMessageMockMvc.perform(post("/api/stocks")
+		// Create the Stock
+		restStockMockMvc.perform(post("/api/stocks")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(stock)))
 				.andExpect(status().isCreated());
@@ -140,7 +139,7 @@ public class StockResourceIntTest {
         stock.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restMessageMockMvc.perform(post("/api/stocks")
+        restStockMockMvc.perform(post("/api/stocks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(stock)))
             .andExpect(status().isBadRequest());
@@ -157,9 +156,9 @@ public class StockResourceIntTest {
         // set the field null
         stock.setCode(null);
 
-        // Create the Message, which fails.
+        // Create the Stock, which fails.
 
-        restMessageMockMvc.perform(post("/api/stocks")
+        restStockMockMvc.perform(post("/api/stocks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(stock)))
             .andExpect(status().isBadRequest());
@@ -175,9 +174,9 @@ public class StockResourceIntTest {
 		// set the field null
 		stock.setCompanyName(null);
 
-		// Create the Message, which fails.
+		// Create the Stock, which fails.
 
-		restMessageMockMvc.perform(post("/api/stocks")
+		restStockMockMvc.perform(post("/api/stocks")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(stock)))
 				.andExpect(status().isBadRequest());
@@ -193,9 +192,9 @@ public class StockResourceIntTest {
 		// set the field null
 		stock.setCostPerShare(null);
 
-		// Create the Message, which fails.
+		// Create the Stock, which fails.
 
-		restMessageMockMvc.perform(post("/api/stocks")
+		restStockMockMvc.perform(post("/api/stocks")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(stock)))
 				.andExpect(status().isBadRequest());
@@ -211,9 +210,9 @@ public class StockResourceIntTest {
 		// set the field null
 		stock.setTotalQuantity(null);
 
-		// Create the Message, which fails.
+		// Create the Stock, which fails.
 
-		restMessageMockMvc.perform(post("/api/stocks")
+		restStockMockMvc.perform(post("/api/stocks")
 				.contentType(TestUtil.APPLICATION_JSON_UTF8)
 				.content(TestUtil.convertObjectToJsonBytes(stock)))
 				.andExpect(status().isBadRequest());
@@ -229,15 +228,15 @@ public class StockResourceIntTest {
         // set the field null
         stock.setPurchaseDate(null);
 
-        // Create the Message, which fails.
+        // Create the Stock, which fails.
 
-        restMessageMockMvc.perform(post("/api/stocks")
+        restStockMockMvc.perform(post("/api/stocks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(stock)))
             .andExpect(status().isBadRequest());
 
-        List<Stock> messageList = stockRepository.findAll();
-        assertThat(messageList).hasSize(databaseSizeBeforeTest);
+        List<Stock> stockList = stockRepository.findAll();
+        assertThat(stockList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -247,7 +246,7 @@ public class StockResourceIntTest {
         stockRepository.saveAndFlush(stock);
 
         // Get all the stockList
-        restMessageMockMvc.perform(get("/api/stocks?sort=id,desc"))
+        restStockMockMvc.perform(get("/api/stocks?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(stock.getId().intValue())))
@@ -265,7 +264,7 @@ public class StockResourceIntTest {
         stockRepository.saveAndFlush(stock);
 
         // Get the stock
-        restMessageMockMvc.perform(get("/api/stocks/{id}", stock.getId()))
+        restStockMockMvc.perform(get("/api/stocks/{id}", stock.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(stock.getId().intValue()))
@@ -280,7 +279,7 @@ public class StockResourceIntTest {
     @Transactional
     public void getNonExistingStock() throws Exception {
         // Get the stock
-        restMessageMockMvc.perform(get("/api/stocks/{id}", Long.MAX_VALUE))
+        restStockMockMvc.perform(get("/api/stocks/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
     }
 
@@ -295,7 +294,7 @@ public class StockResourceIntTest {
         // Update the stock
         Stock updatedStock = stockRepository.findById(stock.getId()).get();
 
-        // Disconnect from session so that the updates on updatedMessage are not directly saved in db
+        // Disconnect from session so that the updates on updatedStock are not directly saved in db
         em.detach(updatedStock);
 		updatedStock
             .code(UPDATED_CODE)
@@ -304,7 +303,7 @@ public class StockResourceIntTest {
 			.totalQuantity(UPDATED_TOTAL_QUANTITY)
             .purchaseDate(UPDATED_PURCHASE_DATE);
 
-        restMessageMockMvc.perform(put("/api/stocks")
+        restStockMockMvc.perform(put("/api/stocks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedStock)))
             .andExpect(status().isOk());
@@ -328,14 +327,14 @@ public class StockResourceIntTest {
         // Create the Stock
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restMessageMockMvc.perform(put("/api/stocks")
+        restStockMockMvc.perform(put("/api/stocks")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(stock)))
             .andExpect(status().isBadRequest());
 
         // Validate the Stock in the database
-        List<Stock> messageList = stockRepository.findAll();
-        assertThat(messageList).hasSize(databaseSizeBeforeUpdate);
+        List<Stock> stockList = stockRepository.findAll();
+        assertThat(stockList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -346,8 +345,8 @@ public class StockResourceIntTest {
 
         int databaseSizeBeforeDelete = stockRepository.findAll().size();
 
-        // Get the message
-        restMessageMockMvc.perform(delete("/api/stocks/{id}", stock.getId())
+        // Get the stock
+        restStockMockMvc.perform(delete("/api/stocks/{id}", stock.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
 
