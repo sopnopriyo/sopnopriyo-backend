@@ -1,6 +1,5 @@
 package com.sopnopriyo.application.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Authority;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.User;
@@ -13,6 +12,7 @@ import com.sopnopriyo.application.web.rest.errors.ForbiddenException;
 import com.sopnopriyo.application.web.rest.util.HeaderUtil;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;

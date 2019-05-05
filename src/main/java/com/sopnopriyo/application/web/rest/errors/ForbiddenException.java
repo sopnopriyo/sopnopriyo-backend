@@ -7,6 +7,6 @@ public class ForbiddenException extends AbstractThrowableProblem {
     private static final long serialVersionUID = 1L;
 
     public ForbiddenException(String message) {
-        super(ErrorConstants.FORBIDDEN, message, Status.FORBIDDEN);
+        //super("For", message, Status.FORBIDDEN);
     }
 }

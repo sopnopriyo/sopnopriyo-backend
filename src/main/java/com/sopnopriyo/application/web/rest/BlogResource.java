@@ -1,11 +1,11 @@
 package com.sopnopriyo.application.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.enumeration.Status;
 import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
