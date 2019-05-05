@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "applicationType": "gateway",
+    "gitCompany": "",
+    "baseName": "sopnopriyo",
+    "packageName": "com.sopnopriyo.application",
+    "packageFolder": "com/sopnopriyo/application",
+    "serverPort": 8080,
+    "serviceDiscoveryType": false,
+    "authenticationType": "jwt",
+    "uaaBaseName": "../uaa",
+    "cacheProvider": "hazelcast",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "enableSwaggerCodegen": true,
+    "messageBroker": false,
+    "buildTool": "maven",
+    "testFrameworks": [],
+    "nativeLanguage": "en",
+    "languages": [
+      "en"
+    ],
+    "jhiPrefix": "sp",
+    "skipClient": true,
+    "jhipsterVersion": "5.8.2",
+    "jwtSecretKey": "MDFhYzViOWExNjAwZjNkOGI5ZTI5OTgzYjczYjI4Y2M1YWNlMjQzMWU0OTYyZTMxZGE4ZTliYTUyOTk0MmI5NmVjOTEyMjY3M2Q4ODViNTcxZDY3MDAwMjczNGM0YmU3ZTU3YTU4N2U5NDI2ZjQ5M2E4NDkzNWE2Njk2MzJkMWU=",
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": []
+  }
+}
