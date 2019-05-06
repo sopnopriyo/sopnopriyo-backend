@@ -6,16 +6,14 @@ import com.sopnopriyo.application.domain.Stock;
 import com.sopnopriyo.application.repository.StockRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,9 +35,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see StockResource
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = SopnopriyoApp.class)
-public class StockResourceIntTest {
+public class StockResourceIT {
 
 
 	private static final String DEFAULT_CODE = "AAAAAAAAAA";
@@ -76,7 +73,7 @@ public class StockResourceIntTest {
 
 	private Stock stock;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
 		final StockResource stockResource = new StockResource(stockRepository);
@@ -103,7 +100,7 @@ public class StockResourceIntTest {
 		return stock;
 	}
 
-	@Before
+	@BeforeEach
 	public void initTest() {
 		stock = createEntity(em);
 	}

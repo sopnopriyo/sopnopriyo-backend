@@ -3,18 +3,21 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.domain.Message;
 import com.sopnopriyo.application.repository.MessageRepository;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
-import com.sopnopriyo.application.web.rest.util.HeaderUtil;
-import com.sopnopriyo.application.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -31,6 +34,9 @@ import java.util.Optional;
 public class MessageResource {
 
     private final Logger log = LoggerFactory.getLogger(MessageResource.class);
+
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
 
     private static final String ENTITY_NAME = "message";
 
@@ -56,7 +62,7 @@ public class MessageResource {
         }
         Message result = messageRepository.save(message);
         return ResponseEntity.created(new URI("/api/messages/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -78,7 +84,7 @@ public class MessageResource {
         }
         Message result = messageRepository.save(message);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, message.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, message.getId().toString()))
             .body(result);
     }
 
@@ -90,10 +96,10 @@ public class MessageResource {
      */
     @GetMapping("/messages")
     @Timed
-    public ResponseEntity<List<Message>> getAllMessages(Pageable pageable) {
+    public ResponseEntity<List<Message>> getAllMessages(@RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder, Pageable pageable) {
         log.debug("REST request to get a page of Messages");
         Page<Message> page = messageRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/messages");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
@@ -123,6 +129,6 @@ public class MessageResource {
         log.debug("REST request to delete Message : {}", id);
 
         messageRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, id.toString())).build();
     }
 }

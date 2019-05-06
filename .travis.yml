@@ -26,7 +26,7 @@ before_install:
 install:
 script:
   - chmod +x mvnw
-  - ./mvnw clean test
+  - ./mvnw clean verify
   - ./mvnw verify -Pprod -DskipTests
 notifications:
   webhooks:

@@ -70,7 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()
-            .antMatchers("/api/register").permitAll()
+            .antMatchers("/api/register").denyAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
@@ -79,6 +79,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/prometheus").permitAll()
             .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.GET, "/api/blogs").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/blogs/*").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/messages").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/portfolios").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/portfolios/*").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/stocks/*").permitAll()
+            .antMatchers("/v2/api-docs/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
         .and()
             .apply(securityConfigurerAdapter());
         // @formatter:on

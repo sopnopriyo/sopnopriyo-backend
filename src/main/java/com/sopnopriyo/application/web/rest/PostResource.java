@@ -9,24 +9,26 @@ import com.sopnopriyo.application.security.AuthoritiesConstants;
 import com.sopnopriyo.application.security.SecurityUtils;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
 import com.sopnopriyo.application.web.rest.errors.ForbiddenException;
-import com.sopnopriyo.application.web.rest.util.HeaderUtil;
-import com.sopnopriyo.application.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,6 +39,9 @@ import java.util.Optional;
 public class PostResource {
 
     private final Logger log = LoggerFactory.getLogger(PostResource.class);
+
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
 
     private static final String ENTITY_NAME = "post";
 
@@ -73,7 +78,7 @@ public class PostResource {
 
         Post result = postRepository.save(post);
         return ResponseEntity.created(new URI("/api/posts/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -110,7 +115,7 @@ public class PostResource {
 
         Post result = postRepository.save(post);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, post.getId().toString()))
+            .headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, post.getId().toString()))
             .body(result);
     }
 
@@ -122,7 +127,7 @@ public class PostResource {
      */
     @GetMapping("/posts")
     @Timed
-    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<Post>> getAllPosts(@RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder, Pageable pageable) {
         log.debug("REST request to get a page of Posts");
 
         String currentUserLogin = SecurityUtils.getCurrentUserLogin().get();
@@ -136,7 +141,8 @@ public class PostResource {
             page = postRepository.findByUserId(loggedInUser.get().getId(), pageable);
         }
 
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/posts");
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
+
         return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
@@ -187,7 +193,7 @@ public class PostResource {
         }
 
         postRepository.deleteById(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, id.toString())).build();
     }
 
     /**

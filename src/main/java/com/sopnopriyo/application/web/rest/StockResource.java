@@ -3,18 +3,21 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.domain.Stock;
 import com.sopnopriyo.application.repository.StockRepository;
 import com.sopnopriyo.application.web.rest.errors.BadRequestAlertException;
-import com.sopnopriyo.application.web.rest.util.HeaderUtil;
-import com.sopnopriyo.application.web.rest.util.PaginationUtil;
+import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -30,6 +33,9 @@ import java.util.Optional;
 public class StockResource {
 
 	private final Logger log = LoggerFactory.getLogger(StockResource.class);
+
+	@Value("${jhipster.clientApp.name}")
+	private String applicationName;
 
 	private static final String ENTITY_NAME = "stock";
 
@@ -55,7 +61,7 @@ public class StockResource {
 		}
 		Stock result = stockRepository.save(stock);
 		return ResponseEntity.created(new URI("/api/stocks/" + result.getId()))
-				.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+				.headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, result.getId().toString()))
 				.body(result);
 	}
 
@@ -77,7 +83,7 @@ public class StockResource {
 		}
 		Stock result = stockRepository.save(stock);
 		return ResponseEntity.ok()
-				.headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, stock.getId().toString()))
+				.headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, stock.getId().toString()))
 				.body(result);
 	}
 
@@ -89,10 +95,10 @@ public class StockResource {
 	 */
 	@GetMapping("/stocks")
 	@Timed
-	public ResponseEntity<List<Stock>> getAllStocks(Pageable pageable) {
+	public ResponseEntity<List<Stock>> getAllStocks(@RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder, Pageable pageable) {
 		log.debug("REST request to get a page of Stocks");
 		Page<Stock> page = stockRepository.findAll(pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/stocks");
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
@@ -122,7 +128,7 @@ public class StockResource {
 		log.debug("REST request to delete Stock : {}", id);
 
 		stockRepository.deleteById(id);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+		return ResponseEntity.ok().headers(HeaderUtil.createAlert(applicationName, ENTITY_NAME, id.toString())).build();
 	}
 }
 

@@ -7,9 +7,8 @@ import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.repository.UserRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,6 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,9 +38,8 @@ import com.sopnopriyo.application.domain.enumeration.Status;
  *
  * @see PostResource
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = SopnopriyoApp.class)
-public class PostResourceIntTest {
+public class PostResourceIT {
 
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
@@ -84,7 +81,7 @@ public class PostResourceIntTest {
 
     private Post post;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final PostResource postResource = new PostResource(postRepository, userRepository);
@@ -113,7 +110,7 @@ public class PostResourceIntTest {
         return post;
     }
 
-    @Before
+    @BeforeEach
     public void initTest() {
         post = createEntity(em);
     }

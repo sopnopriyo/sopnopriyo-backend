@@ -6,16 +6,14 @@ import com.sopnopriyo.application.domain.enumeration.Status;
 import com.sopnopriyo.application.repository.PostRepository;
 import com.sopnopriyo.application.repository.UserRepository;
 import com.sopnopriyo.application.web.rest.errors.ExceptionTranslator;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 import static com.sopnopriyo.application.web.rest.TestUtil.createFormattingConversionService;
 import static org.hamcrest.Matchers.hasItem;
@@ -36,9 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see BlogResource
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = SopnopriyoApp.class)
-public class BlogResourceIntTest {
+public class BlogResourceIT {
 
     private static final String DEFAULT_TITLE = "DDDDDDDDDDDDD";
 
@@ -74,7 +70,7 @@ public class BlogResourceIntTest {
 
     private Post post;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final BlogResource blogResource = new BlogResource(postRepository);
@@ -103,7 +99,7 @@ public class BlogResourceIntTest {
         return post;
     }
 
-    @Before
+    @BeforeEach
     public void initTest() {
         post = createEntity(em);
     }
