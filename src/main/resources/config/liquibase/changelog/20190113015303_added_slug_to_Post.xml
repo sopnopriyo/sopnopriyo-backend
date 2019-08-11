@@ -7,7 +7,7 @@
     <changeSet author="shahin" id="20190113015303-1">
         <addColumn catalogName="sopnopriyo"
                    tableName="post">
-            <column name="slug" type="varchar(255)">
+            <column name="slug" type="varchar(191)">
                 <constraints unique="true" uniqueConstraintName="ux_post_slug"/>
             </column>
         </addColumn>

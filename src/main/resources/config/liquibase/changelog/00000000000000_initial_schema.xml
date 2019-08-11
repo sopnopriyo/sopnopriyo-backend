@@ -6,9 +6,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <changeSet id="00000000000000" author="jhipster">
-        <createSequence sequenceName="sequence_generator" startValue="1050" incrementBy="50"/>
-    </changeSet>
+    <property name="autoIncrement" value="true"/>
 
     <!--
         JHipster core tables.
@@ -28,11 +26,11 @@
             <column name="email" type="varchar(191)">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_user_email"/>
             </column>
-            <column name="image_url" type="varchar(256)"/>
+            <column name="image_url" type="varchar(191)"/>
             <column name="activated" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
-            <column name="lang_key" type="varchar(6)"/>
+            <column name="lang_key" type="varchar(10)"/>
             <column name="activation_key" type="varchar(20)"/>
             <column name="reset_key" type="varchar(20)"/>
             <column name="created_by" type="varchar(50)">
@@ -82,7 +80,6 @@
                   file="config/liquibase/data/user.csv"
                   separator=";"
                   tableName="sp_user">
-            <column name="id" type="numeric"/>
             <column name="activated" type="boolean"/>
             <column name="created_date" type="timestamp"/>
         </loadData>
@@ -104,7 +101,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="event_date" type="timestamp"/>
-            <column name="event_type" type="varchar(255)"/>
+            <column name="event_type" type="varchar(191)"/>
         </createTable>
 
         <createTable tableName="sp_persistent_audit_evt_data">
@@ -114,7 +111,7 @@
             <column name="name" type="varchar(150)">
                 <constraints nullable="false"/>
             </column>
-            <column name="value" type="varchar(255)"/>
+            <column name="value" type="varchar(191)"/>
         </createTable>
         <addPrimaryKey columnNames="event_id, name" tableName="sp_persistent_audit_evt_data"/>
 

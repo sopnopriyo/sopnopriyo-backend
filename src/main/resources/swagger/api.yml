@@ -4,4 +4,19 @@ openapi: '3.0.1'
 info:
   title: 'sopnopriyo'
   version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://localhost:8080
+    description: Development server with TLS Profile
 paths: {}
+
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      description: JWT Authentication
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - jwt: []

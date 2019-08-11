@@ -22,11 +22,11 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="name" type="varchar(191)">
                 <constraints nullable="false" />
             </column>
 
-            <column name="email" type="varchar(255)">
+            <column name="email" type="varchar(191)">
                 <constraints nullable="false" />
             </column>
 
