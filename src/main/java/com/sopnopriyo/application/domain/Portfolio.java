@@ -25,8 +25,8 @@ public class Portfolio implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 255)
-    @Column(name = "title", length = 255, nullable = false)
+    @Size(max = 191)
+    @Column(name = "title", length = 191, nullable = false)
     private String title;
 
     @NotNull

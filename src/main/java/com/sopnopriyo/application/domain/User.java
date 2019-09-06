@@ -54,7 +54,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String lastName;
 
     @Email
-    @Size(min = 5, max = 254)
+    @Size(min = 5, max = 191)
     @Column(length = 254, unique = true)
     private String email;
 
@@ -66,7 +66,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "lang_key", length = 10)
     private String langKey;
 
-    @Size(max = 256)
+    @Size(max = 191)
     @Column(name = "image_url", length = 256)
     private String imageUrl;
 

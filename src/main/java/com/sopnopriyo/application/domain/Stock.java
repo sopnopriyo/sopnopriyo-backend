@@ -25,12 +25,12 @@ public class Stock implements Serializable {
 	private Long id;
 
 	@NotNull
-	@Size(max = 255)
+	@Size(max = 191)
 	@Column(name = "code", length = 255, nullable = false)
 	private String code;
 
 	@NotNull
-	@Size(max = 255)
+	@Size(max = 191)
 	@Column(name = "company_name", length = 255, nullable = false)
 	private String companyName;
 

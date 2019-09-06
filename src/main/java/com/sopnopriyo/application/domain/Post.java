@@ -27,8 +27,8 @@ public class Post implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 255)
-    @Column(name = "title", length = 255, nullable = false)
+    @Size(max = 191)
+    @Column(name = "title", nullable = false)
     private String title;
 
     
