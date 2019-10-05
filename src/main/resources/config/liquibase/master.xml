@@ -21,5 +21,6 @@
     <include file="config/liquibase/changelog/20181021015301_added_entity_constraints_Post.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190113015303_added_slug_to_Post.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20190427015303_added_entity_stock.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20191005015303_added_category_to_post.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

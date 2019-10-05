@@ -56,6 +56,9 @@ public class PostResourceIT {
     private static final String DEFAULT_SLUG = "AAAAAAAAAA";
     private static final String UPDATED_SLUG = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
+    private static final String UPDATED_CATEGORY = "BBBBBBBBBB";
+
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -106,6 +109,7 @@ public class PostResourceIT {
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
             .slug(DEFAULT_SLUG)
             .userId(userRepository.findOneByLogin("user").get().getId())
+            .category(DEFAULT_CATEGORY)
             .date(DEFAULT_DATE);
         return post;
     }
@@ -136,6 +140,7 @@ public class PostResourceIT {
         assertThat(testPost.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testPost.getCoverPhotoUrl()).isEqualTo(DEFAULT_COVER_PHOTO_URL);
         assertThat(testPost.getSlug()).isEqualTo(DEFAULT_SLUG);
+        assertThat(testPost.getCategory()).isEqualTo(DEFAULT_CATEGORY);
         assertThat(testPost.getDate()).isEqualTo(DEFAULT_DATE);
     }
 
@@ -252,9 +257,10 @@ public class PostResourceIT {
             .andExpect(jsonPath("$.content.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.content.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
             .andExpect(jsonPath("$.content.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
+            .andExpect(jsonPath("$.content.[*].category").value(hasItem(DEFAULT_CATEGORY.toString())))
             .andExpect(jsonPath("$.content.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
-    
+
     @Test
     @Transactional
     @WithMockUser
@@ -272,6 +278,7 @@ public class PostResourceIT {
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
+            .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
 
@@ -303,6 +310,7 @@ public class PostResourceIT {
             .status(UPDATED_STATUS)
             .coverPhotoUrl(UPDATED_COVER_PHOTO_URL)
             .slug(UPDATED_SLUG)
+            .category(UPDATED_CATEGORY)
             .date(UPDATED_DATE);
 
         restPostMockMvc.perform(put("/api/posts")
@@ -319,6 +327,7 @@ public class PostResourceIT {
         assertThat(testPost.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testPost.getCoverPhotoUrl()).isEqualTo(UPDATED_COVER_PHOTO_URL);
         assertThat(testPost.getSlug()).isEqualTo(UPDATED_SLUG);
+        assertThat(testPost.getCategory()).isEqualTo(UPDATED_CATEGORY);
         assertThat(testPost.getDate()).isEqualTo(UPDATED_DATE);
     }
 

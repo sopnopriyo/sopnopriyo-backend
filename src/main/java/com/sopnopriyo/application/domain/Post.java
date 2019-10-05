@@ -31,7 +31,6 @@ public class Post implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    
     @Lob
     @Column(name = "sp_body", nullable = false)
     private String body;
@@ -52,6 +51,10 @@ public class Post implements Serializable {
     @NotNull
     @Column(name = "sp_date", nullable = false)
     private Instant date;
+
+    @NotNull
+    @Column(name = "category", nullable = false)
+    private String category;
 
     @Column(name="user_id", nullable = false)
     private long userId;
@@ -149,6 +152,19 @@ public class Post implements Serializable {
 
     public Post userId(long userId) {
         this.userId = userId;
+        return this;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Post category(String category) {
+        this.category= category;
         return this;
     }
 

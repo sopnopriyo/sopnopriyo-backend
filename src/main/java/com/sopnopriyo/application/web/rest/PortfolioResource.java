@@ -96,11 +96,11 @@ public class PortfolioResource {
      */
     @GetMapping("/portfolios")
     @Timed
-    public ResponseEntity<List<Portfolio>> getAllPortfolios(@RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder, Pageable pageable) {
+    public ResponseEntity<Page<Portfolio>> getAllPortfolios(@RequestParam MultiValueMap<String, String> queryParams, UriComponentsBuilder uriBuilder, Pageable pageable) {
         log.debug("REST request to get a page of Portfolios");
         Page<Portfolio> page = portfolioRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(uriBuilder.queryParams(queryParams), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(page, headers, HttpStatus.OK);
     }
 
     /**
