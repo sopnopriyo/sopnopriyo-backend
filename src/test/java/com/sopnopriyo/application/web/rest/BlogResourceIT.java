@@ -46,6 +46,9 @@ public class BlogResourceIT {
 
     private static final String DEFAULT_SLUG = "AAAAAAAAAA";
 
+
+    private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
+
     private static final Instant DEFAULT_DATE = Instant.ofEpochMilli(0L);
 
     @Autowired
@@ -94,6 +97,7 @@ public class BlogResourceIT {
             .status(DEFAULT_STATUS)
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
             .slug(DEFAULT_SLUG)
+            .category(DEFAULT_CATEGORY)
             .userId(userRepository.findOneByLogin("user").get().getId())
             .date(DEFAULT_DATE);
         return post;
@@ -120,6 +124,7 @@ public class BlogResourceIT {
             .andExpect(jsonPath("$.content.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.content.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
             .andExpect(jsonPath("$.content.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
+            .andExpect(jsonPath("$.content.[*].category").value(hasItem(DEFAULT_CATEGORY.toString())))
             .andExpect(jsonPath("$.content.[*].date").value(hasItem(DEFAULT_DATE.toString())));
     }
 
@@ -139,6 +144,7 @@ public class BlogResourceIT {
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
+            .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
     }
 
