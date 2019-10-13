@@ -4,10 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet author="shahin" id="20191005015303-1">
+    <changeSet author="shahin" id="20191013015303-1">
         <addColumn catalogName="sopnopriyo"
                    tableName="post">
-            <column name="category" type="varchar(191)"/>
+            <column name="excerpt" type="clob">
+            </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="20191013015303-2" author="shahin">
+        <sql>UPDATE post SET excerpt=sp_body</sql>
     </changeSet>
 </databaseChangeLog>

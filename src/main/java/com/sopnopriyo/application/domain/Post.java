@@ -32,8 +32,14 @@ public class Post implements Serializable {
     private String title;
 
     @Lob
+    @NotNull
     @Column(name = "sp_body", nullable = false)
     private String body;
+
+    @Lob
+    @NotNull
+    @Column(name = "excerpt", nullable = false)
+    private String excerpt;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -92,6 +98,19 @@ public class Post implements Serializable {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Post excerpt(String excerpt) {
+        this.excerpt = excerpt;
+        return this;
+    }
+
+    public String getExcerpt() {
+        return excerpt;
+    }
+
+    public void setExcerpt(String excerpt) {
+        this.excerpt = excerpt;
     }
 
     public Status getStatus() {

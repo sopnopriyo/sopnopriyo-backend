@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,4 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByStatus(Status status, Pageable pageable);
 
     Optional<Post> findBySlug(String slug);
+
+    @Query("SELECT DISTINCT p.category FROM Post p")
+    List<String> findDistinctCategory();
 }

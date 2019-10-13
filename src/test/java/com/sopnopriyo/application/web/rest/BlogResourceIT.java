@@ -23,7 +23,7 @@ import javax.persistence.EntityManager;
 import java.time.Instant;
 
 import static com.sopnopriyo.application.web.rest.TestUtil.createFormattingConversionService;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,12 +40,13 @@ public class BlogResourceIT {
 
     private static final String DEFAULT_BODY = "DDDDDDDDDDDDD";
 
+    private static final String DEFAULT_EXCERPT = "AAAAAAAAAAAAAAA";
+
     private static final Status DEFAULT_STATUS = Status.PUBLISHED;
 
     private static final String DEFAULT_COVER_PHOTO_URL = "DDDDDDDDDDDDD";
 
     private static final String DEFAULT_SLUG = "AAAAAAAAAA";
-
 
     private static final String DEFAULT_CATEGORY = "AAAAAAAAAA";
 
@@ -94,6 +95,7 @@ public class BlogResourceIT {
         Post post = new Post()
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
+            .excerpt(DEFAULT_EXCERPT)
             .status(DEFAULT_STATUS)
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
             .slug(DEFAULT_SLUG)
@@ -121,6 +123,7 @@ public class BlogResourceIT {
             .andExpect(jsonPath("$.content.[*].id").value(hasItem(post.getId().intValue())))
             .andExpect(jsonPath("$.content.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.content.[*].body").value(hasItem(DEFAULT_BODY.toString())))
+            .andExpect(jsonPath("$.content.[*].excerpt").value(hasItem(DEFAULT_EXCERPT.toString())))
             .andExpect(jsonPath("$.content.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.content.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
             .andExpect(jsonPath("$.content.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
@@ -141,11 +144,26 @@ public class BlogResourceIT {
             .andExpect(jsonPath("$.id").value(post.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
+            .andExpect(jsonPath("$.excerpt").value(DEFAULT_EXCERPT.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
             .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY.toString()))
             .andExpect(jsonPath("$.date").value(DEFAULT_DATE.toString()));
+    }
+
+    @Test
+    @Transactional
+    public  void getCategories() throws Exception {
+        // Initialize the database
+        postRepository.saveAndFlush(post);
+
+        // Get the categories
+        restPostMockMvc.perform(get("/api/blogs/categories"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0]").value(DEFAULT_CATEGORY));
     }
 
     @Test

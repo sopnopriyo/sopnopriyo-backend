@@ -47,6 +47,9 @@ public class PostResourceIT {
     private static final String DEFAULT_BODY = "AAAAAAAAAA";
     private static final String UPDATED_BODY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_EXCERPT = "AAAAAAAAAA";
+    private static final String UPDATED_EXCERPT = "BBBBBBBBBB";
+
     private static final Status DEFAULT_STATUS = Status.DRAFT;
     private static final Status UPDATED_STATUS = Status.PUBLISHED;
 
@@ -105,6 +108,7 @@ public class PostResourceIT {
         Post post = new Post()
             .title(DEFAULT_TITLE)
             .body(DEFAULT_BODY)
+            .excerpt(DEFAULT_EXCERPT)
             .status(DEFAULT_STATUS)
             .coverPhotoUrl(DEFAULT_COVER_PHOTO_URL)
             .slug(DEFAULT_SLUG)
@@ -137,6 +141,7 @@ public class PostResourceIT {
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPost.getBody()).isEqualTo(DEFAULT_BODY);
+        assertThat(testPost.getExcerpt()).isEqualTo(DEFAULT_EXCERPT);
         assertThat(testPost.getStatus()).isEqualTo(DEFAULT_STATUS);
         assertThat(testPost.getCoverPhotoUrl()).isEqualTo(DEFAULT_COVER_PHOTO_URL);
         assertThat(testPost.getSlug()).isEqualTo(DEFAULT_SLUG);
@@ -254,6 +259,7 @@ public class PostResourceIT {
             .andExpect(jsonPath("$.content.[*].id").value(hasItem(post.getId().intValue())))
             .andExpect(jsonPath("$.content.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.content.[*].body").value(hasItem(DEFAULT_BODY.toString())))
+            .andExpect(jsonPath("$.content.[*].excerpt").value(hasItem(DEFAULT_EXCERPT.toString())))
             .andExpect(jsonPath("$.content.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
             .andExpect(jsonPath("$.content.[*].coverPhotoUrl").value(hasItem(DEFAULT_COVER_PHOTO_URL.toString())))
             .andExpect(jsonPath("$.content.[*].slug").value(hasItem(DEFAULT_SLUG.toString())))
@@ -275,6 +281,7 @@ public class PostResourceIT {
             .andExpect(jsonPath("$.id").value(post.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.body").value(DEFAULT_BODY.toString()))
+            .andExpect(jsonPath("$.excerpt").value(DEFAULT_EXCERPT.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
             .andExpect(jsonPath("$.coverPhotoUrl").value(DEFAULT_COVER_PHOTO_URL.toString()))
             .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG.toString()))
@@ -307,6 +314,7 @@ public class PostResourceIT {
         updatedPost
             .title(UPDATED_TITLE)
             .body(UPDATED_BODY)
+            .excerpt(UPDATED_EXCERPT)
             .status(UPDATED_STATUS)
             .coverPhotoUrl(UPDATED_COVER_PHOTO_URL)
             .slug(UPDATED_SLUG)
@@ -324,6 +332,7 @@ public class PostResourceIT {
         Post testPost = postList.get(postList.size() - 1);
         assertThat(testPost.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPost.getBody()).isEqualTo(UPDATED_BODY);
+        assertThat(testPost.getBody()).isEqualTo(UPDATED_EXCERPT);
         assertThat(testPost.getStatus()).isEqualTo(UPDATED_STATUS);
         assertThat(testPost.getCoverPhotoUrl()).isEqualTo(UPDATED_COVER_PHOTO_URL);
         assertThat(testPost.getSlug()).isEqualTo(UPDATED_SLUG);

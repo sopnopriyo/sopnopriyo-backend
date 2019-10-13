@@ -3,7 +3,6 @@ package com.sopnopriyo.application.web.rest;
 import com.sopnopriyo.application.domain.Post;
 import com.sopnopriyo.application.domain.enumeration.Status;
 import com.sopnopriyo.application.repository.PostRepository;
-import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import io.micrometer.core.annotation.Timed;
@@ -19,6 +18,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -69,4 +70,12 @@ public class BlogResource {
         return ResponseUtil.wrapOrNotFound(post);
     }
 
+    @GetMapping("/blogs/categories")
+    @Timed
+    public ResponseEntity<List<String>> getCategories() {
+        log.debug("REST request to get a list of blog categories");
+        List<String> distinctCategory = postRepository.findDistinctCategory();
+        distinctCategory.removeAll(Collections.singleton(null));
+        return new ResponseEntity<List<String>>(distinctCategory, HttpStatus.OK);
+    }
 }
